@@ -175,3 +175,87 @@ params = {'name': 'Sir Robin', 'greeting': 'Well met', 'punctuation': '!'}
 hello4(**params)
 
 # 6.5作用域
+# 内置函数var可以打印看不见的字典
+x = 1
+scope = vars()
+# 取出x
+print(scope['x'])
+# 对x进行修改
+scope['x'] += 1
+print(x)
+
+
+# 除了全局作用域外，每个函数调用都将创建一个作用域
+def foo():
+    x = 42
+
+
+x = 1
+foo()  # foo并不会改变全局变量的值，
+print(x)
+
+#函数可以引用全局变量，但是可能导致bug，慎用
+external = 'berry'
+def combine(parameter):
+    print(parameter + external)
+
+combine("Shrub")
+
+#重新关联全局变量
+x = 2
+def changeGlobal():
+    #告诉Pythonx是全局变量
+    global x
+    x = x + 1
+changeGlobal()
+print(x)
+
+# 嵌套可以用一个函数创建另一个函数
+# 像multiplyByFactor这样存储其所在作用域的函数称为闭包。
+def multipilier(factor):
+    def multiplyByFactor(number):
+        return number * factor
+    return multiplyByFactor
+
+double = multipilier(2)
+print(double(5))
+
+triple = multipilier(3)
+print(triple(5))
+
+#6.6 递归
+#通常递归包含两个部分
+# 基线条件：满足这种条件时函数将直接返回一个值
+# 递归条件：包含一个或多个调用，这些调用旨在解决问题的一部分
+# 关键在于，将问题分解为较小的部分，可以避免递归没完没了，因为问题将被分解成基线条件可以解决的最小问题
+
+#递归实现阶乘
+# 1的阶乘为1。
+# 对于大于1的数字n，其阶乘为n  1的阶乘再乘以n。
+def factorial(n):
+    if n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+print(factorial(10))
+
+#二分查找
+def search(sequence, number, lower=0, upper=None):
+    if upper is None: upper = len(sequence) - 1
+    if lower == upper:
+        assert number == sequence[upper]
+        return upper
+    else:
+        middle = (lower + upper) // 2
+        if number > sequence[middle]:
+            return search(sequence, number, middle + 1, upper)
+        else:
+            return search(sequence, number, lower, middle)
+
+
+seq = [34, 67, 8, 123, 4, 100, 95]
+seq.sort()
+print(seq)
+x = search(seq, 12)
+print(x)
