@@ -157,3 +157,66 @@ for n in range(99, 81, -1):
         break
 else:
     print("Didn't find it")
+
+# 5.6 简单推导
+# 生成从0到9的平方组成的列表
+print([x * x for x in range(10)])  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# 打印那些能被3整除的平方值
+print([x * x for x in range(10) if x % 3 == 0])  # [0, 9, 36, 81]
+
+print([(x, y) for x in range(3) for y in range(3)])
+# [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+
+# 将girls和boys的首字母配对
+girls = ['alice', 'bernice', 'clarice']
+boys = ['chris', 'arnold', 'bob']
+print([b + "+" + g for b in boys for g in girls if b[0] == g[0]])
+# ['chris+clarice', 'arnold+alice', 'bob+bernice']
+
+letterGirls = {}
+for girl in girls:
+    # 建立字典，key为首字母，value默认为[]，之后添加girl全名
+    letterGirls.setdefault(girl[0], []).append(girl)
+    print("输出每次的letterGirls", letterGirls)
+print([b + "+" + g for b in boys for g in letterGirls[b[0]]])
+
+# 使用圆括号并不能实现元组推导，而是创建生成器
+# 然而可以使用花括号执行字典推导
+squares = {i: "{} squared is {}".format(i, i ** 2) for i in range(10)}
+print(squares[8])
+
+# 5.7 pass del 和exec
+# pass可以用作占位符，表示什么都不做
+if name == 'Ralph Auldus Melish':
+    print('Welcome')
+elif name == 'Enid':
+    # 还未完成
+    pass
+elif name == 'Bill Gates':
+    print('Access Denied')
+
+# 使用del删除
+dit1 = {'x': 1, 'y': 2}
+dit2 = dit1
+dit1 = None
+dit2 = None
+# Python解释器将进行垃圾回收 因为没有对象引用它了
+
+x = 1
+del x
+# print(x)
+#NameError: name 'x' is not defined
+
+#exec和eval执行字符串及计算结果
+#exec
+exec("print('hello world')")
+# 执行的同时传入命名空间防止污染其他代码
+from math import sqrt
+scope = {}
+exec("sqrt = 1", scope)
+print(sqrt(4))
+
+#eval计算用字符串表示的Python表达式的值，并返回结果（exec什么都不返回，因为它本身是条语句）。
+print(eval(input("请输入表达式")))
+#也可以提供命名空间
