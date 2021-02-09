@@ -81,10 +81,10 @@ else:
 # is 和 == is来判断是否是相同的对象 ==来判断值是否相等
 x = y = [1, 2, 3]
 z = [1, 2, 3]
-print(x == y)
-print(x is y)
-print(x == z)
-print(x is z)
+print(x == y) #True
+print(x is y) #True
+print(x == z) #True
+print(x is z) #False
 
 # 布尔运算符 and or not
 # 布尔运算符只做必要的运算 x and y 只要x为false 那么立即返回false
