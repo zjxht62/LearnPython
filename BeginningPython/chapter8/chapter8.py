@@ -131,6 +131,7 @@ finally:
 
 '''
 ## 8.4异常和函数
+'''
 def faulty():
     raise Exception("Something is wrong")
 
@@ -145,3 +146,66 @@ def handle_exception():
 
 handle_exception()
 ignore_exception()
+'''
+
+## 8.5 异常之禅
+#有时需要考虑用异常来提升代码效率
+def describePerson(person):
+    print("Description of", person['name'])
+    print("Age:", person['age'])
+    if 'occupation' in person:
+        print('Occupation:', person['occupation'])
+
+person = {"name":"zjx", 'age':26, "occupation":'Tester'}
+
+describePerson(person)
+# 使用异常处理来减少在person中查找occupation的次数
+def describePerson2(person):
+    print("Description of", person['name'])
+    print("Age:", person['age'])
+    try:
+        print('Occupation:', person['occupation'])
+    except KeyError:
+        pass
+
+person2 = {"name":"ckx", 'age':26}
+describePerson2(person2)
+
+#利用异常处理检查对象是否包含特定属性
+'''
+try:
+    obj.write
+except AttributeError:
+    print('The object is not writable')
+else:
+    print('The object is writeable')
+    
+'''
+
+## 8.6 不那么异常的情况
+# 通过warning模块中的warn来发出警告
+from warnings import warn, filterwarnings
+warn("我只是警告一下")
+
+#可以用函数filterwarnings来抑制发出的警告 比如采取error或ignore
+'''
+filterwarnings("ignore")
+warn("我试试是不是被ignore了") #没有输出
+
+filterwarnings('error')
+warn("我被处理成error")
+# Traceback (most recent call last):
+#   File "/Users/zjx/PycharmProjects/LearnPython/BeginningPython/chapter8/chapter8.py", line 194, in <module>
+#     warn("我被处理成error")
+# UserWarning: 我被处理成error
+
+'''
+
+filterwarnings("error")
+warn("This function is really old...", DeprecationWarning) #正常输出为异常
+
+#根据异常来过滤掉特定类型的警告
+filterwarnings("ignore", category=DeprecationWarning)
+warn("Another deprecation warning.", DeprecationWarning) #不会输出，被过滤了
+warn("Something else.") #正常输出
+
