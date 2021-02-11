@@ -224,11 +224,13 @@ class Fibs:
         self.a, self.b = self.b, self.a + self.b
         return self.a
 
+
 fibs = Fibs()
 for f in fibs:
     if f > 1000:
         print(f)
         break
+
 
 # 9.6.2 从迭代器创建序列
 class TestIterator:
@@ -242,5 +244,53 @@ class TestIterator:
         if self.value > 10:
             raise StopIteration
         return self.value
+
+
 ti = TestIterator()
 print(list(ti))
+
+
+# 9.7 生成器
+# 生成器是一种使用普遍函数语法定义的迭代器
+# 包含yield语句的函数都被称为生成器。每次使用yield生成一个值后，函数都将冻结，即在此停止执行，等待被重新唤醒
+# 被重新唤醒之后，函数将从停止的地方开始继续执行
+
+# 通过递归来实现嵌套列表展开
+def flatten(nested):
+    try:
+        for sublist in nested:
+            for element in flatten(sublist):
+                yield element
+    except TypeError:
+        yield nested
+
+
+print(list(flatten([[1], 2, 3, 4, [5, [6, 7], 8]])))
+
+
+# 9.7.3 通用生成器
+# ： 生成器的函数和生成器的迭代器。生成器的函数
+# 是由def语句定义的，其中包含yield。生成器的迭代器是这个函数返回的结果。用不太准确的话
+# 说，这两个实体通常被视为一个，通称为生成器。
+
+# 9.7.4 生成器的方法
+# 在生成器开始运行后，可使用生成器和外部之间的通信渠道向它提供值。这个通信渠道包含
+# 如下两个端点。
+# 1.外部世界：外部世界可访问生成器的方法send，这个方法类似于next， 但接受一个参数（要发送的“消息”，可以是任何对象）。
+# 2.生成器：在挂起的生成器内部， yield可能用作表达式而不是语句。换而言之，当生成器重新运行时， yield返回一个值——通过send从外部世界发送的值。如果使用的是next，yield将返回None。
+def repeater(value):
+    while True:
+        new = (yield value)
+        if new is not None:
+            value = new
+
+
+r = repeater(42)
+print(r.__next__())
+print(r.send("Hello, world"))
+print(r.__next__())
+print(r.__next__())
+
+# 生成器还包含另外两个方法。
+# 方法throw：用于在生成器中（ yield表达式处）引发异常，调用时可提供一个异常类型、一个可选值和一个traceback对象。
+# 方法close：用于停止生成器，调用时无需提供任何参数
