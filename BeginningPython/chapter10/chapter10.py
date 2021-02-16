@@ -45,3 +45,22 @@ import constants.haha
 from constants import heihei
 constants.haha.say()
 heihei.say()
+
+# 10.2探索模块
+# 10.2.1模块包含什么
+import copy
+#使用dir，列出对象的所有属性，通过列表推导式可以过滤掉非外部使用的
+print([n for n in dir(copy) if not n.startswith("_")])
+
+#变量__all__
+#它告诉解释器从这个模块导入所有的名称意味着什么
+print(copy.__all__)
+
+#10.2.2 使用help获取帮助
+print(help(copy.copy))
+
+#10.2.3 文档
+print(range.__doc__)
+
+#使用源代码
+print(copy.__file__)
