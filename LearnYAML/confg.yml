@@ -1,0 +1,17 @@
+public-bucket:
+  - path: /etrust
+    files:
+      - 大意了啊.txt
+      - 没有闪啊
+  - path: /tis
+    files:
+      - 电商.pdf
+      - 电商.png
+private-bucket:
+  - path: /etrust
+    files:
+      - 真力音响.pdf
+      - 破损.exe
+  - path: /tis
+    files:
+      - 方赛飞.ds
