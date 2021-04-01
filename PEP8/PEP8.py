@@ -1,37 +1,39 @@
-def function(
-        var1, var2, var3,
-        var4):
-    return 1
+class A:
+
+    def __method(self):
+        print('我是A里面的__method')
+
+    def method(self):
+        self.__method()
 
 
-foo = function(
-    1, 3,
-    4, 5)
+a = A()
+a.method()  # output:我是A里面的__method
 
-print(foo)
-# No extra indentation.
-if (this_is_one_thing and
-        that_is_another_thing):
-    do_something()
 
-# Add a comment, which will provide some distinction in editors
-# supporting syntax highlighting.
-if (this_is_one_thing and
-        that_is_another_thing):
-    # Since both conditions are true, we can frobnicate.
-    do_something()
+class B(A):
+    def __method(self):
+        print('我是B里面的__method')
 
-# Add some extra indentation on the conditional continuation line.
-if (this_is_one_thing
-        and that_is_another_thing):
-    do_something()
 
-my_list = [
-    1, 2, 3,
-    4, 5, 6
-]
+b = B()
+b.method()  # output:我是A里面的__method，并没有覆盖父类的方法
 
-result = function(
-    1, 3,
-    3, 4
-)
+
+class C:
+    class_var = 10  # 类变量
+
+    def __init__(self, instance_var):
+        self.instance_var = instance_var  # 实例变量
+
+
+c1 = C(1)
+# 通过实例可以访问类变量和实例变量
+print(c1.instance_var)  # output: 1
+print(c1.class_var)  # output: 10
+c2 = C(2)
+print(c2.instance_var)  # output: 2
+print(c2.class_var)  # output: 10
+
+# 直接通过类访问类变量
+print(C.class_var)

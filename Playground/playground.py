@@ -1,5 +1,5 @@
-from . import m1
-from .m1 import add
+# from . import m1
+# from .m1 import add
 # for i in range(2, 100):
 #     if i == 2:
 #         print(i)
@@ -37,3 +37,9 @@ for x in list:
     print(x)
 else:
     print("else")
+
+
+files = 'a',
+files1 = ('a',)
+print(type(files))
+print(type(files1))

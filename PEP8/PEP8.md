@@ -403,3 +403,164 @@ do_one(); do_two(); do_three(long, argument,
 
 if foo == 'blah': one(); two(); three()
 ```
+## <u>When to Use Trailing Commas 何时用结尾逗号</u>
+尾部的逗号通常是可选的，但是在创建一个元素的tuple的时候是必须的。为了清楚起见，建议在创建单个元素的tuple时用括号括起来：
+```python
+# Correct
+FILES = ('setup.cfg',)
+
+# @ Wrong
+FILES = 'setup.cfg',
+```
+其实在结尾的逗号是多余的，但是如果一个list可能会随着时间而新增项目。就需要遵守如下规则：将每个值单独放在一行，同时加上结尾逗号
+```python
+# Correct:
+FILES = [
+    'setup.cfg',
+    'tox.ini',
+    ]
+initialize(FILES,
+           error=True,
+           )
+
+# Wrong:
+FILES = ['setup.cfg', 'tox.ini',]
+initialize(FILES, error=True,)
+```
+## <u>Comments 注释</u>
+和代码逻辑不符的注释还不如没有，修改了代码要及时更新注释。
+
+注释要是一个完整的句子。第一个字母大写，除非是一个小写字母开头的标识符
+
+块注释通常由一个或多个完整句子组成的段落组成，每个句子都以句号结尾。
+
+在多句注释中，除了最后一句之后，您应该在句子结尾句后使用两个空格。
+
+确保您的注释清晰明了，并且对于其他使用该语言的使用者来说也很容易理解。
+
+来自非英语国家的Python编码人员：请用英语写您的评论，除非您有120％的把握确保不会说这种语言的人不会阅读该代码。
+
+### <u>Block Comments 块注释</u>
+块注释通常用来说明下面的一部分或所有的代码，并和说明的代码缩进到一个级别。块注释的每一行都以＃和一个空格开头（除非注释中的文本是缩进的）。
+
+块注释中的段落由包含单个＃的行分隔。
+
+### <u>Inline Comments 行内注释</u>
+谨慎地使用行内注释
+
+行内注释和代码在同一行，应该和代码具有至少两个空格的间距，同时以#加空格开始
+
+行内注释是不必要的，并且如果代码自己能表名其作用，那就不要加。不要这样做：
+```python
+x = x + 1                 # Increment x
+
+# 但是可能下面这种情况注释是有帮助的
+x = x + 1                 # Compensate for border
+
+```
+### <u>Documentation Strings 文档字符串</u>
+在PEP257中有着写文档字符串的规范
+
++ 为所有的公共的modules，functions，classes，methods写文档。但是非公共的方法可以不写，但是你应该写个注释，说明这个方法的作用，写在def那一行的下方
+
++ PEP 257描述了良好的文档字符串约定。请注意，最重要的是，结束多行文档字符串的“”应单独位于一行上：
+```python
+"""Return a foobang
+
+Optional plotz says to frobnicate the bizbaz first.
+"""
+```
++ 对于只有一行的文档字符串，结尾的“””不用换行了：
+```python
+"""Return an ex-parrot."""
+```
+
+## <u>Naming Conventions 命名约定</u>
+Python里面的命名有些混乱，所以我们不一定要求完全一致。但是我们推荐下面的命名标准。新的模块和包应该遵守，如果之前的，可能需要保证一致性而不遵守此规则。
+
+### <u>Overriding Principle 覆盖原则</u>
+那些在API中作为公共部分暴露给用户的名字应该反应其用途，而不是遵循此规则
+
+### <u>Descriptive:Naming Styles 描述性：命名样式</u>
+有多种多样的命名样式，每种都有不同的特点
+
++ b (单独小写字母)
++ B (单独大写字母)
++ lowercase
++ lower_case_with_underscores
++ UPPERCASE
++ UPPER_CASE_WITH_UNDERSCORES
++ CapitalizedWords (or CapWords, or CamelCase -- so named because of the bumpy look of its letters [4]). This is also sometimes known as StudlyCaps.
++ Note: 当使用CapWords的时候，如果开头的字母组合是大写，那么就全大写， 比如 HTTPServerError 好于 HttpServerError.
++ mixedCase (differs from CapitalizedWords by initial lowercase character!)
++ Capitalized_Words_With_Underscores (ugly!)
+
+还有一种用短的缩写来组织名字的写法。在Python里用的不多，但是还是提一下。比如：os.stat()方法返回一个tuple，里面形如:st_mode，st_size，st_mtime
+
+此外，还可以识别出以下使用前划线或下划线的特殊形式（通常可以将它们与任何大小写惯例结合使用）：
++ _single_leading_underscore: 表名弱的内部使用。 举例： from M import * 不会引入下划线开头的对象
++ single_trailing_underscore_: 此约定是为了避免和Python关键字发生冲突
+```python
+tkinter.Toplevel(master, class_='ClassName')
+```
++ __double_leading_underscore: 当命名类的一个属性, 调用名称处理(inside class FooBar, __boo becomes _FooBar__boo; see below).用于标记那些不能被子类覆盖的方法
++ __double_leading_and_trailing_underscore__: 用户命名空间内的魔法属性和方法. E.g. __init__, __import__ or __file__. 不要发明类似的名称; 按照文档使用.
+  
+### <u>Descriptive:Naming Styles 说明性：命名约定</u>
+#### <u>Names to Avoid 避免使用的名称</u>
+不要用小写的l、大写的O、大写的I，这三个在一些字体里看着容易混
+
+#### <u>ASCII Compatibility ASCII兼容性</u>
+标准库中使用的标识符必须与PEP 3131的策略部分中所述的ASCII兼容。
+
+#### <u>Package and Module Names 模块名和包名</u> 
+模块名应该全小写，可以用下划线增加可读性。尽管在包名中不推荐使用下划线，但是也应该使用全小写的名称
+
+当用C或C ++编写的扩展模块具有随附的Python模块提供更高级别的接口（例如，面向对象的接口）时，C / C ++模块具有一个下划线（例如_socket）。
+
+#### <u>Class Names 类名</u> 
+类名通常应使用CapWords约定。
+
+如果这个接口主要被用作可调用的函数，那么可以使用函数的命名约定
+
+请注意，内置名称有一个单独的约定：大多数内置名称是单个单词（或两个单词一起运行），而CapWords约定仅用于异常名称和内置常量。
+
+#### <u>Type Variable Names 类型变量命名</u> 
+在PEP 484中引入的类型变量的名称通常应使用CapWord，而不是使用短名称：T，AnyStr，Num。建议将后缀_co或_contra分别添加到用于声明协变或反变行为的变量中：
+```python
+from typing import TypeVar
+
+VT_co = TypeVar('VT_co', covariant=True)
+KT_contra = TypeVar('KT_contra', contravariant=True)
+```
+
+#### <u>Exception Names 异常名</u> 
+异常也是一个类，所以应采用类名的约定。同时以Exception或Error结尾来表示它是一个异常或错误
+
+#### <u>Global Variable Names 全局变量名</u> 
+（我们希望这些变量只能在一个模块内使用。）约定与函数的约定大致相同。
+
+为了通过 from M import * 而使用的module，应该使用__all__机制来防止导出全局变量，或使用较早的约定在此类全局变量前加下划线（您可能需要这样做以表明这些全局变量是“非公共模块” ”）。
+
+#### <u>Function and Variable Names 函数名和变量名</u> 
+函数名应该使用小写，同时用下划线增加可读性。
+
+变量名应该和函数名遵守一样的约定。
+
+仅在已经是主流样式（例如threading.py）的上下文中才允许使用blendingCase，以保持向后兼容性。
+
+#### <u>Function and Method Arguments 函数和方法的参数名</u> 
+实例方法第一个参数应该是self。
+
+类方法的第一个参数应该是cls。
+
+如果函数的参数名称和保留关键字冲突了，最好在后面加一个下划线，比如class_（但是最好换一个名字来避免冲突)
+
+#### <u>Method Names and Instance Variables 方法名和实例变量</u> 
+使用函数命名规则：小写字母，必要时用下划线分隔单词，提高可读性。
+
+仅仅对非公共方法和实例变量使用前下划线
+
+为了避免名称与子类冲突，请使用两个前下划线来调用Python的名称处理规则。
+
+Python用类名来修饰这些名称：如果Foo类具有名为__a的属性，则Foo .__ a不能访问它。 （坚持的用户仍然可以通过调用Foo._Foo__a来获得访问权限。）通常，应仅使用双引号下划线来避免名称与设计为子类的类中的属性发生冲突。
