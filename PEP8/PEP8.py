@@ -37,3 +37,5 @@ print(c2.class_var)  # output: 10
 
 # 直接通过类访问类变量
 print(C.class_var)
+
+
