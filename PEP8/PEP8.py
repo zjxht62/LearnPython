@@ -38,4 +38,18 @@ print(c2.class_var)  # output: 10
 # 直接通过类访问类变量
 print(C.class_var)
 
+# try:
+#     raise KeyError('key找不到')
+# except KeyError as exc:
+#     print(str(exc))
+#     raise RuntimeError(str(exc))
 
+# Wrong:
+def foo():
+    try:
+        1 / 0
+        return 1
+    finally:
+        return 42
+
+print(foo())

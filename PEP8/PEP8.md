@@ -609,5 +609,229 @@ note3：避免用属性处理复杂的运算，调用属性表示法时，人们
 + 应该以不损害Python其他实现（PyPy，Jython，IronPython，Cython，Psyco等）的方式编写代码。  
 例如，对于形式为+ = b或a = a + b的语句，请不要依赖CPython有效地实现就地字符串连接。 即使在CPython中，这种优化也是脆弱的（仅适用于某些类型），并且在不使用引用计数的实现中根本不存在这种优化。 在库的性能敏感部分中，应改用''.join（）形式。 这将确保在各种实现方式中串联发生在线性时间内。
  
-+  与单例（如None）的比较应该始终使用is or not，永远不要使用等于运算符。  
++ 与单例（如None）的比较应该始终使用is or not，永远不要使用等于运算符。  
 同时注意，如果你想写的是 if x is not None，那就别写 if x，在测试是否将默认为None的变量或参数设置为其他值时。另一个值可能具有在布尔上下文中可能为false的类型（例如空列表等）！参见例子：none_test.py
+  
++ 使用 is not 操作符而不是 not ... is。尽管两者功能上一样，但是前者可读性更高。
+```python
+# Correct:
+if foo is not None:
+
+# Wrong:
+if not foo is None:
+```
+
++ 在实现比较的排序操作时，最好实现以下所有六个操作（__eq __，__ ne __，__ lt __，__ le __，__ gt __，__ ge__），而不要依赖于其他代码仅进行特定的比较。  
+为了最大程度减少工作量，functools.total_ordering（）装饰器提供了一种生成缺少的比较方法的工具。  
+  PEP207指出Python有反身性规定。因此，解释器可以将y> x替换为x <y，将y> = x替换为x <= y，并且可以交换x == y和x！= y的参数。但是保证sort（）和min（）操作使用<运算符，而max（）函数使用>运算符。但是，最好实现所有六个操作，以免在其他情况下不会造成混淆。
+  
++ 始终使用def语句，而不是直接把一个lambda表达式绑定给一个变量  
+```python
+# Correct:
+def f(x): return 2*x
+
+# Wrong:
+f = lambda x: 2*x
+```
+第一种形式表示函数对象的名称为"f"，而不是"<lambda> "。这在traceback和展示的时候更清楚。使用赋值语句消除了lambda表达式可以提供的优于显式def语句的唯一好处（即可以将其嵌入更大的表达式中）。
+
++ 从Exception派生异常，而不是从BaseException派生。从BaseException派生的异常在被catch的时候几乎都没法正常使用。  
+根据可能需要捕获异常的代码（而不是引发异常的位置）的区别来设计异常层次结构。旨在回答“出了什么问题？”的问题。以编程方式，而不是仅仅声明“发生了问题”（请参阅​​PEP 3151，以了解针对内置异常层次结构学习本课程的示例）。  
+  类命名约定在此处适用，但是如果异常是错误，则应在异常类中添加后缀“ Error”。用于非本地流控制或其他形式的信令的非错误异常不需要特殊的后缀。
+  
++ 适当使用异常链。在Python3里面，"raise X from Y"应该用于指示显式替换异常而不会丢失原始回溯。  
+故意替换内部异常时（在Python 2中使用“raise X”或在Python 3.3+中使用“raise X from None”）,确保将相关详细信息转移到新的异常（例如，在将KeyError转换为AttributeError时保留属性名称，或将原始异常的文本嵌入新的异常消息中）。
+  
++ 在Python2里面抛出异常的时候，使用 `raise ValueError('message')` 而不是旧的格式 `raise ValueError, 'message'`。  
+后面的形式在Python3里面不合法。  
+  使用括号的形式还有一个好处，就是当你的异常参数很长或者包含字符串格式时，由于包含括号，不用使用行继续符号\
+  
++ 当捕获异常的时候，尽可能捕获具体的异常，而不是单纯的`except:`子句。
+```python
+try:
+    import platform_specific_module
+except ImportError:
+    platform_specific_module = None
+```
+只有`except:`子句的话，将会捕获SystemExit和KeyboardInterrupt异常，使得没法用`Control-C`来结束程序，并且会掩盖其他的问题。如果你想捕获所有程序抛出的问题，
+应该使用`except Excption:`（单独的一个except等同于`except BaseException`)  
+一个好的经验法则是将纯`except`子句的使用限制为两种情况：  
+1. 如果异常处理程序将traceback打印或记录到log里，至少用户还知道发生了错误
+2. 如果代码需要进行清理，但是让异常通过`raise.try...finally`向上传递应该是更好的方法
+
++ 当把一个捕获到的异常绑定到name时，最好使用Python2.6中添加显式名称的语法：
+```python
+try:
+    process_data()
+except Exception as exc:
+    raise DataProcessingFailedError(str(exc))
+```
+这是Python 3中唯一支持的语法，并且避免了与较早的基于逗号的语法相关的歧义问题。
+
++ 捕获操作系统的Error时，最好使用Python 3.3中引入的显式异常层次结构，而不是检查errno值。
+
++ 此外，对于所有的`try/except`子句，将try子句限制为所需测试的最小数量的代码。同时这样做可以避免掩盖错误。
+```python
+# Correct:
+try:
+    value = collection[key]
+except KeyError:
+    return key_not_found(key)
+else:
+    return handle_value(value)
+```
+```python
+# Wrong:
+try:
+    # Too broad!
+    return handle_value(collection[key])
+except KeyError:
+    # Will also catch KeyError raised by handle_value()
+    return key_not_found(key)
+```
+
++ 当某段代码包含对资源的访问时，使用`with`语句来保证使用完成后立即可靠地清理。使用`try/finally`子句也可以。
+
++ 每当他们执行除获取和释放资源以外的其他操作时，都应通过单独的函数或方法来调用上下文管理器：
+```python
+# Correct:
+with conn.begin_transaction():
+    do_stuff_in_transaction(conn)
+```
+```python
+# Wrong:
+with conn:
+    do_stuff_in_transaction(conn)
+```
+后面的示例没有提供任何信息来指示__enter__和__exit__方法除了在事务处理后关闭连接外，还在做其他事情。在这种情况下，精确很重要。
+
++ 在使用return语句时保持一致，函数中的所有retuen应该要么返回一个表达式，要么什么都不返回。如果任何语句返回了表达式，那么什么不返回任何值的return语句应该声明返回None，并且在函数的末尾（如果可访问的话）应该存在一个显式的return语句：
+```python
+# Correct
+def foo(x):
+    if x >= 0:
+        return math.sqrt(x)
+    else:
+        return None
+
+def bar(x):
+    if x < 0:
+        return None
+    return math.sqrt(x)
+```
+```python
+# Wrong
+def foo(x):
+    if x >= 0:
+        return math.sqrt(x)
+
+def bar(x):
+    if x < 0:
+        return
+    return math.sqrt(x)
+```
++ 使用字符串方法而不是字符串模块。  
+  解释一下：原本Python一开始有一个string的module，后来逐渐被字符串对象的方法所取代（形如：`'abc'.lower()`)  
+  字符串方法总是更快，并且与unicode字符串共享相同的API。如果需要与2.0以上的Python向后兼容，可以小心地覆盖此原则。
+  
++ 使用`''.startswith()`和`''.endswith()`而不是切片操作来判断字符串前缀或后缀。  
+startswith()和endswith()更干净，更不容易出错
+```python
+# Correct:
+if foo.startswith('bar'):
+```
+```python
+# Wrong:
+if foo[:3] == 'bar':
+```
+
++ 对象类型比较应始终使用isinstance（）而不是直接比较类型：
+```python
+# Correct:
+if isinstance(obj, int):
+```
+```python
+# Wrong:
+if type(obj) is type(1):
+```
+当检查一个对象是否是string的时候，注意它也可能是unicode字符串。在Python2里面，str和Unicode有一个公共的基类basestring，因此可以执行下面的操作：
+```python
+if isinstance(obj, basestring):
+```
+注意，在Python3中，`unicode`和`basestring`不复存在（只有str），bytes对象不再是字符串（而是整数序列）。
+  
++ 对于序列，（strings，lists，tuples），所有的空序列都是False
+```python
+# Correct:
+if not seq:
+if seq:
+```
+```python
+# Wrong:
+if len(seq):
+if not len(seq):
+```
++ 不要写依赖大量尾随空格的字符串文字。这种尾随的空格在视觉上是无法区分的，因此一些编辑器（或更近期的reindent.py）会对其进行修剪。
+
++ 不要使用==比较True/False和布尔值
+```python
+# Correct:
+if greeting:
+```
+```python
+# Wrong:
+if greeting == True:
+```
+Worse:
+```python
+if greeting is True:
+```
++ 不鼓励在`try...finally`语句中使用流程控制语句`return/break/continue`。流程控制语句将跳到finally之外的地方。这是因为这样的语句将隐式取消通过finally套件传播的任何活动异常：
+```python
+# Wrong:
+def foo():
+    try:
+        1 / 0
+    finally:
+        return 42
+```
+
+### <u>方法注解</u>
+随着PEP 484的接受，方法注解的样式规则正在改变。
++ 为了向前兼容，Python 3代码中的函数注解最好应使用PEP 484语法。 （在上一节中，有一些关于注解的格式建议。）
++ 不再鼓励使用本PEP中先前建议的注解样式进行实验。
++ 但是，在stdlib之外，现在鼓励在PEP 484规则之内进行实验。 例如，使用PEP 484样式类型注解为大型第三方库或应用程序标记，查看添加这些注解的难易程度，并观察它们的存在是否增加了代码的可理解性。
++ Python标准库在采用此类注解时应保持保守，但允许将其用于新代码和大型重构。
++ 于想要不同使用功能注解的代码，建议添加以下形式的注解：
+```python
+# type: ignore
+```
+在文件顶部附近；这告诉类型检查器忽略所有注解。 （在PEP 484中可以找到更细粒度的方法来阻止类型检查程序的投诉。）
++ 与检查器一样，类型检查器是可选的独立工具。默认情况下，Python解释器不应由于类型检查而发出任何消息，也不应基于注解更改其行为。
++ 不想使用类型检查器的用户可以随意忽略它们。 但是，预期第三方库程序包的用户可能希望对那些程序包运行类型检查器。 为此，PEP 484建议使用存根文件：类型检查器优先于相应的.py文件读取的.pyi文件。 存根文件可以与库一起分发，也可以通过排版的仓库[5]单独分发（在库作者的允许下）。
++ 对于需要向后兼容的代码，可以以注解的形式添加类型注解。请参阅PEP 484 [6]的相关部分。
+
+### <u>变量注解</u>
+PEP 526引入了变量注解。针对它们的样式建议与上述函数注解中的样式建议类似：
++ 模块级变量，类和实例变量以及局部变量的注解应在冒号后面有一个空格。
++ 冒号前不应有空格。
++ 如果一个赋值有一个右手边，那么等号在两边应该恰好有一个空格：
+```python
+# Correct:
+
+code: int
+
+class Point:
+    coords: Tuple[int, int]
+    label: str = '<unknown>'
+```
+```python
+# Wrong:
+
+code:int  # No space after colon
+code : int  # Space before colon
+
+class Test:
+    result: int=0  # No spaces around equality sign
+```
++ 尽管PEP 526已被Python 3.6接受，但变量注解语法是所有版本的Python上存根文件的首选语法（有关详细信息，请参阅PEP 484）。
