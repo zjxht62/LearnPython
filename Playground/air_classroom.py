@@ -4,10 +4,10 @@ from bs4 import BeautifulSoup
 # 上半年和下半年区分是u和d 上半年是u
 # https://cache.bdschool.cn/public/bdschool/index/static/migu/2020_u_w.html?grade=8
 # 2020_d_w.html?grade=8
-term_code = 'u'
+term_code = 'd'
 
 # 高二的代码是11 高一是10
-grade_code = '11'
+grade_code = '12'
 
 params = {'grade': grade_code}
 headers = {
