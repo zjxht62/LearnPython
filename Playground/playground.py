@@ -31,15 +31,25 @@
 #     else:
 #         print(i, 'is prime number')
 
-list = [1, 2, 3, 4, 5]
-for x in list:
-    continue
-    print(x)
-else:
-    print("else")
+# list = [1, 2, 3, 4, 5]
+# for x in list:
+#     continue
+#     print(x)
+# else:
+#     print("else")
+#
+#
+# files = 'a',
+# files1 = ('a',)
+# print(type(files))
+# print(type(files1))
 
+import sys
+if __name__ == '__main__':
+    env = sys.argv[1]
+    parent_task_list = sys.argv[2:]
+    non_repeating_parent_task_list = list(set(parent_task_list))
+    non_repeating_parent_task_list.sort(key=parent_task_list.index)
 
-files = 'a',
-files1 = ('a',)
-print(type(files))
-print(type(files1))
+    print(env)
+    print(non_repeating_parent_task_list)

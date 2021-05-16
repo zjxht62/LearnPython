@@ -1,2 +1,2 @@
-def add(a, b):
-    return a + b
+print('哈哈')
+input('<press enter>')
