@@ -13,6 +13,11 @@ print(string.printable)
 # 所有标点符号
 print(string.punctuation)
 
+print("The Middle by Jimmy Eat World".center(39))
+#     The Middle by Jimmy Eat World
+print("The Middle by Jimmy Eat World".center(39, "*"))
+#*****The Middle by Jimmy Eat World*****
+
 ### 3.4.1 find
 # 返回子串最左边的索引值，没找到返回-1
 title = "Monty Python's Flying Cirus"
@@ -21,11 +26,11 @@ print(title.find("zjx"))  # -1
 
 # find可以指定查找的范围
 subject = "$$$ Get rich now!!! $$$"
-print(subject.find("$$$"))
+print(subject.find("$$$")) # 0
 # 只提供起始点
-print(subject.find('$$$', 1))
+print(subject.find('$$$', 1)) # 20
 # 提供起始点和终点，同样是含头不含尾
-print(subject.find("!!!", 0, 10))
+print(subject.find("!!!", 0, 10)) # -1
 
 ### 3.4.2 join
 # join用来在队列里添加元素
@@ -56,6 +61,9 @@ print(string.split(","))
 # 可以对用户输入进行处理，去掉多余的空格
 string = "    sdafs   "
 print(string.strip())
+
+string = "*** SPAM * for * everyone!!! ***".strip(' *!')
+print(string) # SPAM * for * everyone
 
 ### 3.4.7 translate
 # translate方法只处理单个字符，同时进行多个替换
