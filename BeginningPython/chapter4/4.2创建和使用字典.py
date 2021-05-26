@@ -34,14 +34,14 @@ print(dic2["info"]['name'])
 print("Cecil's phone number is %(Cecil)s." % phonebook)
 # 这种方式在模板中非常有用，我觉得感觉有点儿和js里面的解构似的
 template = '''<html>
-<head><title>%(title)s</title></head>
+<head><title>{title}</title></head>
 <body>
-<h1>%(title)s</h1>
-<p>%(text)s</p>
+<h1>{title}</h1>
+<p>{text}</p>
 </body>
 '''
 data = {"title": "My home page", "text": "欢迎"}
-print(template % data)
+print(template.format_map(data))
 
 ### 4.2.4 字典方法
 # clear 清除字典中所有项,
