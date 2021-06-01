@@ -7,7 +7,9 @@ print("哇", "哈", "哈", sep="_")
 # 自定义结束字符串，定义为！所以不会换行
 print("fuck", "you", end='!')
 print("ford")
+print('haha')
 # fuck you!ford
+# haha
 
 # 序列解包:将一个序列（或任何可迭代对象）解包，并将得到的值存储到一系列变量里
 # 同时赋值
@@ -45,6 +47,11 @@ x += 1
 x *= 2
 print(x)
 
+fnord = 'foo'
+fnord += 'bar'
+fnord *= 2
+print(fnord)
+
 # 5.4 条件和条件语句
 # Python中认为为假的值：False None 0 "" () [] {}
 # 各种类型的数值0，空序列，以及空映射都视为假，而其他各种值都视为真
@@ -53,10 +60,10 @@ print(False == 0)
 print(True + False + 12)  # 13
 
 # 可以利用bool函数转换其他值
-bool("fuck")
-bool(42)
-bool('')
-bool(0)
+print(bool("fuck"))
+print(bool(42))
+print(bool(''))
+print(bool(0))
 
 # if示例
 num = int(input(('Enter a number')))
@@ -85,6 +92,8 @@ print(x == y) #True
 print(x is y) #True
 print(x == z) #True
 print(x is z) #False
+
+
 
 # 布尔运算符 and or not
 # 布尔运算符只做必要的运算 x and y 只要x为false 那么立即返回false

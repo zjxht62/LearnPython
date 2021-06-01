@@ -44,12 +44,13 @@
 # print(type(files))
 # print(type(files1))
 
-import sys
-if __name__ == '__main__':
-    env = sys.argv[1]
-    parent_task_list = sys.argv[2:]
-    non_repeating_parent_task_list = list(set(parent_task_list))
-    non_repeating_parent_task_list.sort(key=parent_task_list.index)
-
-    print(env)
-    print(non_repeating_parent_task_list)
+# import sys
+# if __name__ == '__main__':
+#     env = sys.argv[1]
+#     parent_task_list = sys.argv[2:]
+#     non_repeating_parent_task_list = list(set(parent_task_list))
+#     non_repeating_parent_task_list.sort(key=parent_task_list.index)
+#
+#     print(env)
+#     print(non_repeating_parent_task_list)
+print(ord('赵'))
