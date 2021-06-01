@@ -13,7 +13,7 @@ print(strList)
 del strList[0]
 print(strList)
 # 分片赋值
-strList[0:2] = ['粪', '粪']
+strList[0:3] = ['粪', '粪']
 print(strList)
 # 利用分片来插入，同理可用于删除
 numbers = [1, 5]
@@ -28,6 +28,25 @@ lst.append(4)
 lst.append([4, 4, 4])
 print(lst)
 # [1, 2, 3, 4, [4, 4, 4]]
+
+# clear就地清空列表的内容
+lst.clear()
+
+# copy方法复制列表
+a = [1, 2, 3]
+b = a  # a和b都引用同一个列表
+b[1] = 4
+print(a)  # [1,4,3]
+# 使用copy创建a的副本
+a = [1, 2, 3]
+b = a.copy()
+b[1] = 4
+print(a)  # [1, 2, 3]
+# 切片操作也是复制a
+a = [1, 2, 3]
+b = a[:]
+b[1] = 4
+print(a)  # [1, 2, 3]
 
 # count用于统计出现的次数
 ['to', 'be', 'or', 'not', 'to', 'be'].count('to')
@@ -59,7 +78,7 @@ x = ['to', 'be', 'or', 'not', 'to', 'be']
 x.remove('be')
 print(x)
 
-# reverse将列表元素反向存放
+# reverse将列表元素反向存放，修改但不返回值
 x = [1, 2, 3]
 x.reverse()
 print(x)
@@ -70,6 +89,12 @@ y = x.sort()
 print(y)  # None
 y = x[:]
 y.sort()
+print(y)
+
+# sorted 创建排序后的副本
+x = [4, 5, 23, 1, 56, -6, 4]
+y = sorted(x)
+print(x)
 print(y)
 
 # 高级排序 通过给定比较函数来排序

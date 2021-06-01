@@ -51,6 +51,13 @@
 #     non_repeating_parent_task_list = list(set(parent_task_list))
 #     non_repeating_parent_task_list.sort(key=parent_task_list.index)
 #
-#     print(env)
+#     print(env)`
 #     print(non_repeating_parent_task_list)
-print(ord('赵'))
+girls = ['alice', 'bernice', 'clarice', 'cat']
+boys = ['chris', 'arnold', 'bob']
+letterGirls = {}
+for girl in girls:
+    # 建立字典，key为首字母，value默认为[]，之后添加girl全名
+    letterGirls.setdefault(girl[0], []).append(girl)
+    print("输出每次的letterGirls", letterGirls)
+print([b + "+" + g for b in boys for g in letterGirls[b[0]]])
