@@ -61,3 +61,6 @@ for girl in girls:
     letterGirls.setdefault(girl[0], []).append(girl)
     print("输出每次的letterGirls", letterGirls)
 print([b + "+" + g for b in boys for g in letterGirls[b[0]]])
+
+squares = {i: "{} squared is {}".format(i, i ** 2) for i in range(10)}
+print(squares)
