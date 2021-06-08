@@ -114,6 +114,10 @@ store(mybook, 'Zhao Jixiang')
 store(mybook, 'Da Chou Bao')
 print(lookup(mybook, 'middle', ''))
 
+def hello_1(greeting, name):
+    print(f'{greeting}, {name}')
+
+hello_1(name='赵吉祥', greeting='吃了吗')
 
 # 调用时指定关键字参数
 def hello(greeting, name):
@@ -124,18 +128,31 @@ hello(greeting='Fuck you', name='Ford')
 
 
 # 可以在定义函数时指定默认值
-def helloWithDefault(greeting='Hello', name='world'):
-    print('{}, {}!'.format(greeting, name))
+def hello3(greeting='你好', name='世界'):
+    print(f'{greeting}, {name}')
+
+hello3() # 你好, 世界
+hello3('吃了吗') # 吃了吗, 世界
+hello3('吃了吗', '您') # 吃了吗, 您
+hello3(name='陌生人') # 你好, 陌生人
 
 
-helloWithDefault(name='ckx')
-
-
-def hello4(name, greeting='Hello', punctuation='!'):
+def hello_4(name, greeting='Hello', punctuation='!'):
     print('{}, {}{}'.format(greeting, name, punctuation))
 
 
-hello4('Mars')
+hello_4('zjx')
+hello_4('Mars', 'Howdy')
+hello_4('Mars', 'Howdy', '...')
+hello_4('zjx', punctuation='。')
+hello_4('zjx', greeting='吃了吗')
+hello_4(greeting='吃了吗', name='赵吉祥')
+hello_4()
+# Traceback (most recent call last):
+#   File "E:/zjx/PycharmProjects/LearnPython/BeginningPython/chapter6/chapter6.py", line 150, in <module>
+#     hello_4()
+# TypeError: hello_4() missing 1 required positional argument: 'name'
+
 
 
 # 收集剩余参数
