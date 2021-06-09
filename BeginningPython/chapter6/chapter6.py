@@ -51,8 +51,11 @@ x = test()  # 打印出 just a test
 print(x)  # None
 
 list = [1, 2, 3]
+
+
 def replaceList(n):
     n = [4, 5, 6]
+
 
 replaceList(list)
 print(list)  # [1, 2, 3]
@@ -68,11 +71,13 @@ changeStr(s1)
 # 还是哈哈，因为字符串以及数和元组是不可变的，你不能修改他们，只能替换
 print(s1)
 
-
 # 但是如果是可变的数据结构就会被修改
 list = ['嘿嘿', '呵呵']
+
+
 def changeList(n):
     n[0] = '哈哈'
+
 
 changeList(list)
 print(list)  # ['哈哈', '呵呵']
@@ -114,10 +119,13 @@ store(mybook, 'Zhao Jixiang')
 store(mybook, 'Da Chou Bao')
 print(lookup(mybook, 'middle', ''))
 
+
 def hello_1(greeting, name):
     print(f'{greeting}, {name}')
 
+
 hello_1(name='赵吉祥', greeting='吃了吗')
+
 
 # 调用时指定关键字参数
 def hello(greeting, name):
@@ -131,10 +139,11 @@ hello(greeting='Fuck you', name='Ford')
 def hello3(greeting='你好', name='世界'):
     print(f'{greeting}, {name}')
 
-hello3() # 你好, 世界
-hello3('吃了吗') # 吃了吗, 世界
-hello3('吃了吗', '您') # 吃了吗, 您
-hello3(name='陌生人') # 你好, 陌生人
+
+hello3()  # 你好, 世界
+hello3('吃了吗')  # 吃了吗, 世界
+hello3('吃了吗', '您')  # 吃了吗, 您
+hello3(name='陌生人')  # 你好, 陌生人
 
 
 def hello_4(name, greeting='Hello', punctuation='!'):
@@ -147,21 +156,20 @@ hello_4('Mars', 'Howdy', '...')
 hello_4('zjx', punctuation='。')
 hello_4('zjx', greeting='吃了吗')
 hello_4(greeting='吃了吗', name='赵吉祥')
-hello_4()
+
+
 # Traceback (most recent call last):
 #   File "E:/zjx/PycharmProjects/LearnPython/BeginningPython/chapter6/chapter6.py", line 150, in <module>
 #     hello_4()
 # TypeError: hello_4() missing 1 required positional argument: 'name'
 
 
-
 # 收集剩余参数
-def printParams(*params):
+def print_params(*params):
     print(params)
 
 
-# 剩余参数将被收集到元组中
-printParams(1, 2, 3)
+print_params('哈哈', '呵呵', '嘿嘿')
 
 
 def print_params_2(title, *params):
@@ -170,6 +178,7 @@ def print_params_2(title, *params):
 
 
 print_params_2('Params', 1, 2, 3)
+print_params_2('nothing')
 
 
 # 收集中间的参数，这时必须指定后续参数名称
@@ -192,6 +201,15 @@ def printParams3(title, **params):
 printParams3("我是title", haha='哈哈', heihei='嘿嘿')
 
 
+def print_params_4(x, y, z=3, *pospar, **keypar):
+    print(x, y, z)
+    print(pospar)
+    print(keypar)
+
+
+print_params_4(1, 2, 3, 5, 6, 7, foo=1, bar=2)
+
+
 # 我是title {'haha': '哈哈', 'heihei': '嘿嘿'}
 
 # 分配参数
@@ -202,20 +220,21 @@ def add(x, y):
 
 
 params = (1, 2)
-print(add(*params))
+print(add(*params))  # 3
+print(add(*[1, 2]))  # 3
 
-params = {'name': 'Sir Robin', 'greeting': 'Well met', 'punctuation': '!'}
-hello4(**params)
+params = {'name': 'Sir Robin', 'greeting': 'Well met'}
+hello3(**params)
 
 # 6.5作用域
 # 内置函数var可以打印看不见的字典
 x = 1
 scope = vars()
 # 取出x
-print(scope['x'])
+print(scope['x'])  # 1
 # 对x进行修改
 scope['x'] += 1
-print(x)
+print(x)  # 2
 
 
 # 除了全局作用域外，每个函数调用都将创建一个作用域
@@ -235,7 +254,7 @@ def combine(parameter):
     print(parameter + external)
 
 
-combine("Shrub")
+combine("Shrub")  # Shrubberry
 
 # 重新关联全局变量
 x = 2
@@ -248,7 +267,7 @@ def changeGlobal():
 
 
 changeGlobal()
-print(x)
+print(x)  # 3
 
 
 # 嵌套可以用一个函数创建另一个函数
@@ -273,6 +292,24 @@ print(triple(5))
 # 递归条件：包含一个或多个调用，这些调用旨在解决问题的一部分
 # 关键在于，将问题分解为较小的部分，可以避免递归没完没了，因为问题将被分解成基线条件可以解决的最小问题
 
+# 非递归的求阶乘
+def factorial(n):
+    result = n
+    for i in range(1, n):
+        result = result * i
+    return result
+
+
+print(factorial(4))  # 24
+
+
+def factorial(n):
+    if n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+
 # 递归实现阶乘
 # 1的阶乘为1。
 # 对于大于1的数字n，其阶乘为n  1的阶乘再乘以n。
@@ -283,8 +320,29 @@ def factorial(n):
         return n * factorial(n - 1)
 
 
-print(factorial(10))
+print(factorial(10)) # 3628800
 
+
+def power(x, n):
+    result = 1
+    for i in range(n):
+        result *= x
+    return result
+
+print(power(2, 6)) # 64
+
+def bin_search(list, number):
+    middle_index = len(list)//2
+    if number > list[middle_index]:
+        bin_search(list[middle_index:], number)
+    elif number < list[middle_index]:
+        bin_search(list[:middle_index], number)
+    else:
+        return middle_index
+
+
+list = [1, 2, 5, 6, 7, 8, 12]
+print(bin_search(list, 5))
 
 # 二分查找
 def search(sequence, number, lower=0, upper=None):
