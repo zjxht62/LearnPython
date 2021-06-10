@@ -363,3 +363,8 @@ seq.sort()
 print(seq)
 x = search(seq, 12)
 print(x)
+
+numbers = [1, 3, 5, 324, 25312, 12 , 123, 543, 53,4, 5]
+from functools import reduce
+a = reduce(lambda x, y: x + y, numbers)
+print(a)  # 26385
