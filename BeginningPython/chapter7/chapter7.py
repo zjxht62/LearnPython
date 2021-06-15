@@ -38,6 +38,17 @@ instance.method()  # 我是一个方法 我有self
 instance.method = function
 instance.method()  # 我是一个函数，没有self
 
+class Bird:
+    song = 'Squaawk!'
+    def sing(self):
+        print(self.song)
+
+bird = Bird()
+bird.sing()  # Squaawk!
+# birdsong指向的是方法bird.sing，意味着它也能访问参数self（即被关联的实例）
+birdsong = bird.sing
+birdsong()  # Squaawk!
+
 
 ############################################################################################
 # 7.2.4 再谈隐藏
@@ -57,6 +68,8 @@ class Secretive:
 s = Secretive()
 # s.__inaccessible() #AttributeError: 'Secretive' object has no attribute '__inaccessible'
 s.accessible()
+# 我来调用私有方法
+# 我是私有方法输出的内容
 
 # 但是是有奇怪的方法来调用的 在类定义中，对所有以两个下划线开头的名称都进行转换，即在开头加上一个下划线和类名
 # 比如这里的 __inaccessible() 就变成 _Secretive__inaccessible()
@@ -118,7 +131,8 @@ fuckFilter = FuckFilter()
 fuckFilter.init()
 seq = ['Fuck', 'you', 'Ford']
 seq = fuckFilter.filter(seq)
-print(seq)
+print(seq)  # ['you', 'Ford']
+
 
 ##########################################################
 # 7.2.7 深入探讨继承
@@ -134,7 +148,7 @@ print(isinstance(fuckFilter, FuckFilter))  # True
 print(isinstance(fuckFilter, Filter))  # True
 
 # 通过__class__属性获得对象所属的类
-print(fuckFilter.__class__)
+print(fuckFilter.__class__)  # <class '__main__.FuckFilter'>
 
 
 #####################################################
@@ -143,19 +157,18 @@ class Calculator:
     def calculate(self, expression):
         self.value = eval(expression)
 
-
 class Talker:
     def talk(self):
-        print("Hi, my value is", self.value)
-
+        print('Hi, my value is', self.value)
 
 class TalkingCalculator(Calculator, Talker):
     pass
 
+tk = TalkingCalculator()
+tk.calculate('1 + 2 + 3')
+tk.talk()
+# Hi, my value is 6
 
-tc = TalkingCalculator()
-tc.calculate("1 + 2")
-tc.talk()  # Hi, my value is 3
 
 # 使用多重继承时，有一点务必注意：如果多个超类以不同的方式实现了同一个方法（即有多个同名方法）
 # ，必须在class语句中小心排列这些超类，因为位于前面的类的方法将覆盖位于后面的类的方法。
@@ -166,9 +179,11 @@ tc.talk()  # Hi, my value is 3
 # 不能像Java那样显式编写接口，只能假定这个对象有你需要的方法，或者通过检查来保证
 
 # 通过hasattr函数来判断所需方法是否存在
-print(hasattr(tc, 'talk'))  # True
+print(hasattr(tk, 'talk'))  # True
 # getattr可以获取属性，并设置默认返回
-print(callable(getattr(tc, 'talk', None)))  # True
+print(callable(getattr(tk, 'talk', None)))  # True
+
+print(tk.__dict__) # {'value': 6}
 
 #################################################
 # 7.2.10 抽象基类
