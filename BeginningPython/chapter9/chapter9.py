@@ -9,16 +9,17 @@ class Foobar:
     def __init__(self, value=42):
         self.somevar = value
 
-    # def __init__(self, value1, value2):
-    #     self.somevar = value1
-    #     self.somevar2 = value2
-    #
-    # def __init__(self):
-    #     self.somevar = 45
 
-
+#     def __init__(self, value1, value2):
+#         self.somevar = value1
+#         self.somevar2 = value2
+#
+#     def __init__(self):
+#         self.somevar = 45
+#
+#
 f = Foobar()
-print(f.somevar)
+print(f.somevar)  # 45
 f = Foobar(99)
 print(f.somevar)
 
@@ -77,38 +78,52 @@ sb.eat()  # 因为没有调用父类的构造方法，所以没有hungry这个�
 # 9.3.1 基本的序列和映射协议
 
 # 创建一个无穷序列
-def checkIndex(key):
-    if not isinstance(key, int): raise TypeError
-    if key < 0: raise IndexError
+def check_key(key):
+    # 如果key的类型不对，应抛出TypeError
+    if not isinstance(key, int):
+        raise TypeError
+    # 如果key的值不合法，应抛出IndexError
+    if key < 0:
+        raise IndexError
 
 
 class ArithmeticSequence:
+
     def __init__(self, start=0, step=1):
+        """
+        初始化这个算术序列
+        start -序列中的第一个值
+        step -两个相邻值的差
+        changed -一个字典，包含用户修改后的值
+        """
         self.start = start
         self.step = step
+        # 用一个字典保存修改的元素
         self.changed = {}
 
     def __getitem__(self, key):
-        checkIndex(key)
+        check_key(key)
         try:
             return self.changed[key]
         except KeyError:
             return self.start + key * self.step
 
     def __setitem__(self, key, value):
-        checkIndex(key)
+        check_key(key)
         self.changed[key] = value
 
-
-s = ArithmeticSequence(1, 2)
-print(s[4])  # 9
-s[4] = 2
-print(s[4])
-print(s[5])
+    # 因为是无穷序列，所以没有实现__len__
+    # 因为不允许进行修改，所以没实现__del__
 
 
-# 因为没有实现__del__所以无法删除元素 del s[4]
-# 因为是无穷序列 所以也没有__len__方法
+arithmetic_seq = ArithmeticSequence(1, 2)
+print(arithmetic_seq[0])  # 1
+print(arithmetic_seq[1])  # 3
+print(arithmetic_seq[2])  # 5
+print(arithmetic_seq[3])  # 7
+print(arithmetic_seq[4])  # 9
+arithmetic_seq[4] = 999
+print(arithmetic_seq[4])  # 999
 
 
 # 9.3.2 从list、dict和str派生
@@ -126,10 +141,10 @@ class CounterList(list):
 
 
 cl = CounterList(range(10))
-print(cl)
-print(cl.counter)
-print(cl[4] + cl[2])
-print(cl.counter)
+print(cl)  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(cl.counter)  # 0
+print(cl[4] + cl[2])  # 6
+print(cl.counter)  # 2 调用了两次__getitem__方法
 
 
 # 9.5.1 函数property
@@ -150,17 +165,13 @@ class Rectangle():
     size = property(getSize, setSize)
 
 
-# 没有加property
 r = Rectangle()
-r.height = 5
 r.width = 10
-print(r.getSize())
-r.setSize((100, 99))
-print(r.width)
-print(r.height)
+r.height = 5
 
-# 通过property来将size属性和getter/setter关联
-print(r.size)
+print(r.size)  # (10, 5)
+r.size = 150, 100
+print(r.width)  # 150
 
 
 # 9.5.2 静态方法和类方法
@@ -179,11 +190,12 @@ class MyClass:
 
 
 # 无需实例化对象，直接通过类来调用
-MyClass.staticMehtod()
-MyClass.classMethod()
+MyClass.staticMehtod()  # 我是静态方法
+MyClass.classMethod()  # 我是类方法 <class '__main__.MyClass'>
 
 
-# 9.5.3 __getattr__  __setattr__等方法
+
+### 9.5.3 __getattr__  __setattr__等方法
 # 这些方法可以拦截对对象属性的所有访问企图，用途之一就是在旧式类中实现特性（在旧式类中，函
 # 数property的行为可能不符合预期）。要在属性被访问时执行一段代码，必须使用一些魔法方法。
 
