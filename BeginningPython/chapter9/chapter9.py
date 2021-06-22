@@ -194,7 +194,6 @@ MyClass.staticMehtod()  # 我是静态方法
 MyClass.classMethod()  # 我是类方法 <class '__main__.MyClass'>
 
 
-
 ### 9.5.3 __getattr__  __setattr__等方法
 # 这些方法可以拦截对对象属性的所有访问企图，用途之一就是在旧式类中实现特性（在旧式类中，函
 # 数property的行为可能不符合预期）。要在属性被访问时执行一段代码，必须使用一些魔法方法。
@@ -240,7 +239,7 @@ class Fibs:
 fibs = Fibs()
 for f in fibs:
     if f > 1000:
-        print(f)
+        print(f)  # 1597
         break
 
 
@@ -259,13 +258,24 @@ class TestIterator:
 
 
 ti = TestIterator()
-print(list(ti))
-
+print(list(ti))  # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 # 9.7 生成器
 # 生成器是一种使用普遍函数语法定义的迭代器
 # 包含yield语句的函数都被称为生成器。每次使用yield生成一个值后，函数都将冻结，即在此停止执行，等待被重新唤醒
 # 被重新唤醒之后，函数将从停止的地方开始继续执行
+nested = [[1, 2], [3, 4], [5]]
+
+
+def flatten(nested):
+    for sublist in nested:
+        for ele in sublist:
+            yield ele
+
+
+print(list(flatten(nested)))  # [1, 2, 3, 4, 5]
+
+
 
 # 通过递归来实现嵌套列表展开
 def flatten(nested):
