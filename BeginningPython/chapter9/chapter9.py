@@ -1,6 +1,7 @@
 # 构造函数
 # Python 不同于java 只能有一个构造函数，不支持通过参数重载
 # 如果定义了多个，会用最晚定义的那个
+import random
 from typing import overload, List
 
 
@@ -316,3 +317,41 @@ print(r.__next__())
 # 生成器还包含另外两个方法。
 # 方法throw：用于在生成器中（ yield表达式处）引发异常，调用时可提供一个异常类型、一个可选值和一个traceback对象。
 # 方法close：用于停止生成器，调用时无需提供任何参数
+
+
+def conflict(state, nextX):
+    nextY = len(state)
+    for i in range(len(state)):
+        # 如果下一个皇后和当前皇后的水平距离为0（在同一列）或与它们的垂直距离相等（位于一条对角线上），这个表达式就为真
+        if abs(state[i] - nextX) in (0, nextY - i):
+            return True
+    return False
+
+
+def queens(num, state):
+    if len(state) == num -1:
+        for pos in range(num):
+            if not conflict(state, pos):
+                yield pos
+
+print(list(queens(4, (1, 3, 0))))
+
+
+def queens(num=8, state=()):
+    for pos in range(num):
+        if not conflict(state, pos):
+            if len(state) == num-1:
+                yield (pos,)
+            else:
+                for result in queens(num, state + (pos,)):
+                    yield (pos,) + result
+
+print(list(queens(4)))  # [(1, 3, 0, 2), (2, 0, 3, 1)]
+
+def prettyprint(solution):
+    def line(pos, length=len(solution)):
+        return '. ' * (pos) + 'X ' + '. ' * (length-pos-1)
+    for pos in solution:
+        print(line(pos))
+
+prettyprint(random.choice(list(queens(8))))
