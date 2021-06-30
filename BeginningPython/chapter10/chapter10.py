@@ -51,10 +51,11 @@ heihei.say()
 import copy
 #使用dir，列出对象的所有属性，通过列表推导式可以过滤掉非外部使用的
 print([n for n in dir(copy) if not n.startswith("_")])
-
+# ['Error', 'copy', 'deepcopy', 'dispatch_table', 'error']
 #变量__all__
 #它告诉解释器从这个模块导入所有的名称意味着什么
 print(copy.__all__)
+# ['Error', 'copy', 'deepcopy']
 
 #10.2.2 使用help获取帮助
 print(help(copy.copy))
