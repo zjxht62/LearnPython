@@ -187,3 +187,178 @@ print(copy.__file__)
 ```
 
 ## 10.3 标准库：一些深受欢迎的模块
+在安装Python之后，就会获得很多有用的模块。
+### 10.3.1 sys
+模块sys能访问与Python解释器相关的变量和函数。
+
+|函数/变量|描述|
+|---|---|
+|argv| 命令行参数，包括脚本名|
+|exit([arg])|退出当前程序，可通过可选参数指定返回值或错误信息|
+|modules|一个字典，将模块名映射到加载的模块|
+|path|一个列表，包含要在其中查找模块的目录的名称|
+|platform|一个平台标识符，如sunos5或win32|
+|stdin|标准输入流----一个类似于文件的对象|
+|stdout|标准输出流----一个类似于文件的对象|
+|stderr|标准错误流----一个类似于文件的对象|
+
+变量sys.argv包含传递给Python解释器的参数，其中包括脚本名  
+
+函数sys.exit退出当前程序。可以向他提供一个整数，指出程序是否成功，这是一种UNIX约定。在大多数情况下，使用该参数的默认值（0，表示成功）即可。也可向它提供一个字符串，这个字符串将成为错误消息，对用户找出程序终止的原因很有帮助。在这种情况下，程序退出时将显示指定的错误消息以及一个表示失败的编码。
+```python
+# 如果默认或是None，那默认exit code是0
+sys.exit() # Process finished with exit code 0
+
+# 如果是integer，将此integer作为exit code
+sys.exit(5)
+
+# 如果是其他对象，会将他先print出来，exit code将是1
+sys.exit('娃哈哈')
+```
+
+映射sys.modules将模块名映射到模块（仅限于当前已导入的模块）。
+```python
+print(sys.modules)
+# {'sys': <module 'sys' (built-in)>, 'builtins': <module 'builtins' (built-in)>, '_frozen_importlib': <module 'importlib._bootstrap' (frozen)>, '_imp': <module '_imp' (built-in)>, '_warnings': <module '_warnings' (built-in)>, '_frozen_importlib_external': <module 'importlib._bootstrap_external' (frozen)>, '_io': <module 'io' (built-in)>, 'marshal': <module 'marshal' (built-in)>, 'nt': <module 'nt' (built-in)>, '_thread': <module '_thread' (built-in)>, '_weakref': <module '_weakref' (built-in)>, 'winreg': <module 'winreg' (built-in)>, 'time': <module 'time' (built-in)>, 'zipimport': <module 'zipimport' (frozen)>, '_codecs': <module '_codecs' (built-in)>, 'codecs': <module 'codecs' from 'E:\\Programs\\Python\\Python38-32\\lib\\codecs.py'>, 'encodings.aliases': <module 'encodings.aliases' from 'E:\\Programs\\Python\\Python38-32\\lib\\encodings\\aliases.py'>, 'encodings': <module 'encodings' from 'E:\\Programs\\Python\\Python38-32\\lib\\encodings\\__init__.py'>, 'encodings.utf_8': <module 'encodings.utf_8' from 'E:\\Programs\\Python\\Python38-32\\lib\\encodings\\utf_8.py'>, '_signal': <module '_signal' (built-in)>, '__main__': <module '__main__' from 'E:/zjx/PycharmProjects/LearnPython/BeginningPython/chapter10/chapter10.py'>, 'encodings.latin_1': <module 'encodings.latin_1' from 'E:\\Programs\\Python\\Python38-32\\lib\\encodings\\latin_1.py'>, '_abc': <module '_abc' (built-in)>, 'abc': <module 'abc' from 'E:\\Programs\\Python\\Python38-32\\lib\\abc.py'>, 'io': <module 'io' from 'E:\\Programs\\Python\\Python38-32\\lib\\io.py'>, '_stat': <module '_stat' (built-in)>, 'stat': <module 'stat' from 'E:\\Programs\\Python\\Python38-32\\lib\\stat.py'>, 'genericpath': <module 'genericpath' from 'E:\\Programs\\Python\\Python38-32\\lib\\genericpath.py'>, 'ntpath': <module 'ntpath' from 'E:\\Programs\\Python\\Python38-32\\lib\\ntpath.py'>, 'os.path': <module 'ntpath' from 'E:\\Programs\\Python\\Python38-32\\lib\\ntpath.py'>, '_collections_abc': <module '_collections_abc' from 'E:\\Programs\\Python\\Python38-32\\lib\\_collections_abc.py'>, 'os': <module 'os' from 'E:\\Programs\\Python\\Python38-32\\lib\\os.py'>, '_sitebuiltins': <module '_sitebuiltins' from 'E:\\Programs\\Python\\Python38-32\\lib\\_sitebuiltins.py'>, '_locale': <module '_locale' (built-in)>, '_bootlocale': <module '_bootlocale' from 'E:\\Programs\\Python\\Python38-32\\lib\\_bootlocale.py'>, '_codecs_cn': <module '_codecs_cn' (built-in)>, '_multibytecodec': <module '_multibytecodec' (built-in)>, 'encodings.gbk': <module 'encodings.gbk' from 'E:\\Programs\\Python\\Python38-32\\lib\\encodings\\gbk.py'>, 'types': <module 'types' from 'E:\\Programs\\Python\\Python38-32\\lib\\types.py'>, 'importlib._bootstrap': <module 'importlib._bootstrap' (frozen)>, 'importlib._bootstrap_external': <module 'importlib._bootstrap_external' (frozen)>, 'warnings': <module 'warnings' from 'E:\\Programs\\Python\\Python38-32\\lib\\warnings.py'>, 'importlib': <module 'importlib' from 'E:\\Programs\\Python\\Python38-32\\lib\\importlib\\__init__.py'>, 'importlib.machinery': <module 'importlib.machinery' from 'E:\\Programs\\Python\\Python38-32\\lib\\importlib\\machinery.py'>, 'importlib.abc': <module 'importlib.abc' from 'E:\\Programs\\Python\\Python38-32\\lib\\importlib\\abc.py'>, '_operator': <module '_operator' (built-in)>, 'operator': <module 'operator' from 'E:\\Programs\\Python\\Python38-32\\lib\\operator.py'>, 'keyword': <module 'keyword' from 'E:\\Programs\\Python\\Python38-32\\lib\\keyword.py'>, '_heapq': <module '_heapq' (built-in)>, 'heapq': <module 'heapq' from 'E:\\Programs\\Python\\Python38-32\\lib\\heapq.py'>, 'itertools': <module 'itertools' (built-in)>, 'reprlib': <module 'reprlib' from 'E:\\Programs\\Python\\Python38-32\\lib\\reprlib.py'>, '_collections': <module '_collections' (built-in)>, 'collections': <module 'collections' from 'E:\\Programs\\Python\\Python38-32\\lib\\collections\\__init__.py'>, '_functools': <module '_functools' (built-in)>, 'functools': <module 'functools' from 'E:\\Programs\\Python\\Python38-32\\lib\\functools.py'>, 'contextlib': <module 'contextlib' from 'E:\\Programs\\Python\\Python38-32\\lib\\contextlib.py'>, 'importlib.util': <module 'importlib.util' from 'E:\\Programs\\Python\\Python38-32\\lib\\importlib\\util.py'>, 'zope': <module 'zope' (namespace)>, 'enum': <module 'enum' from 'E:\\Programs\\Python\\Python38-32\\lib\\enum.py'>, '_sre': <module '_sre' (built-in)>, 'sre_constants': <module 'sre_constants' from 'E:\\Programs\\Python\\Python38-32\\lib\\sre_constants.py'>, 'sre_parse': <module 'sre_parse' from 'E:\\Programs\\Python\\Python38-32\\lib\\sre_parse.py'>, 'sre_compile': <module 'sre_compile' from 'E:\\Programs\\Python\\Python38-32\\lib\\sre_compile.py'>, 'copyreg': <module 'copyreg' from 'E:\\Programs\\Python\\Python38-32\\lib\\copyreg.py'>, 're': <module 're' from 'E:\\Programs\\Python\\Python38-32\\lib\\re.py'>, 'token': <module 'token' from 'E:\\Programs\\Python\\Python38-32\\lib\\token.py'>, 'tokenize': <module 'tokenize' from 'E:\\Programs\\Python\\Python38-32\\lib\\tokenize.py'>, 'linecache': <module 'linecache' from 'E:\\Programs\\Python\\Python38-32\\lib\\linecache.py'>, 'traceback': <module 'traceback' from 'E:\\Programs\\Python\\Python38-32\\lib\\traceback.py'>, 'sitecustomize': <module 'sitecustomize' from 'E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\plugins\\python\\helpers\\pycharm_matplotlib_backend\\sitecustomize.py'>, 'site': <module 'site' from 'E:\\Programs\\Python\\Python38-32\\lib\\site.py'>, 'hello': <module 'hello' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\hello.py'>, 'hello2': <module 'hello2' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\hello2.py'>, 'hello3': <module 'hello3' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\hello3.py'>, 'pprint': <module 'pprint' from 'E:\\Programs\\Python\\Python38-32\\lib\\pprint.py'>, 'constants': <module 'constants' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\constants\\__init__.py'>, 'constants.haha': <module 'constants.haha' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\constants\\haha.py'>, 'constants.heihei': <module 'constants.heihei' from 'E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10\\constants\\heihei.py'>, '_weakrefset': <module '_weakrefset' from 'E:\\Programs\\Python\\Python38-32\\lib\\_weakrefset.py'>, 'weakref': <module 'weakref' from 'E:\\Programs\\Python\\Python38-32\\lib\\weakref.py'>, 'copy': <module 'copy' from 'E:\\Programs\\Python\\Python38-32\\lib\\copy.py'>, '_opcode': <module '_opcode' (built-in)>, 'opcode': <module 'opcode' from 'E:\\Programs\\Python\\Python38-32\\lib\\opcode.py'>, 'dis': <module 'dis' from 'E:\\Programs\\Python\\Python38-32\\lib\\dis.py'>, 'collections.abc': <module 'collections.abc' from 'E:\\Programs\\Python\\Python38-32\\lib\\collections\\abc.py'>, 'inspect': <module 'inspect' from 'E:\\Programs\\Python\\Python38-32\\lib\\inspect.py'>, 'pkgutil': <module 'pkgutil' from 'E:\\Programs\\Python\\Python38-32\\lib\\pkgutil.py'>, 'platform': <module 'platform' from 'E:\\Programs\\Python\\Python38-32\\lib\\platform.py'>, 'urllib': <module 'urllib' from 'E:\\Programs\\Python\\Python38-32\\lib\\urllib\\__init__.py'>, 'urllib.parse': <module 'urllib.parse' from 'E:\\Programs\\Python\\Python38-32\\lib\\urllib\\parse.py'>, 'pydoc': <module 'pydoc' from 'E:\\Programs\\Python\\Python38-32\\lib\\pydoc.py'>}
+
+```
+
+变量sys.path在本章前面讨论过，它是一个字符串列表，其中的每个字符串都是一个目录名，
+执行import语句时将在这些目录中查找模块
+```python
+import pprint
+pprint.pprint(sys.path)
+
+['E:\\zjx\\PycharmProjects\\LearnPython\\BeginningPython\\chapter10',
+ 'E:\\zjx\\PycharmProjects\\LearnPython',
+ 'E:\\Program Files\\JetBrains\\PyCharm '
+ '2021.1.2\\plugins\\python\\helpers\\pycharm_display',
+ 'E:\\Programs\\Python\\Python38-32\\python38.zip',
+ 'E:\\Programs\\Python\\Python38-32\\DLLs',
+ 'E:\\Programs\\Python\\Python38-32\\lib',
+ 'E:\\Programs\\Python\\Python38-32',
+ 'E:\\Programs\\Python\\Python38-32\\lib\\site-packages',
+ 'E:\\Program Files\\JetBrains\\PyCharm '
+ '2021.1.2\\plugins\\python\\helpers\\pycharm_matplotlib_backend',
+ 'C:/python']
+```
+
+变量sys.platform（一个字符串）是运行解释器的平台名称。可能表示的是操作系统的名称，也可能是表示其他平台类型（如Java虚拟机）的名称（如java1.4.0）----如果你运行的是Jython
+```python
+print(sys.platform)  # win32
+```
+
+变量sys.stdin、 sys.stdout和sys.stderr是类似于文件的流对象，表示标准的UNIX概念：
+标准输入、标准输出和标准错误。简单地说， Python从sys.stdin获取输入（例如，用于input中），
+并将输出打印到sys.stdout。
+
+demo:按相反顺序打印命令行参数
+```python
+import sys
+print(' '.join(reversed(sys.argv[1:])))
+```
+```shell
+$ python reverseargs.py one two three
+three two one
+```
+
+### 10.3.2 os
+模块os让你能够访问多个操作系统服务。除此之外，os和它的子模块os.path还包含多个查看、创建和删除目录及文件的函数，以及一些操作路径的函数（例如， os.path.split和os.path.join让你在大多数情况下都可
+忽略os.pathsep）
+
+|函数/变量|描述|
+|---|---|
+|environ|包含环境变量的映射|
+|system(command)|在子shell中执行操作系统命令|
+|sep|路径中使用的分隔符|
+|pathsep|分隔不同路径的分隔符|
+|linesep|行分隔符（'\n'、'\r'或'\r\n'）|
+|urandom(n)|返回n个字节的强加密随机数据|
+
+映射os.environ包含环境变量，这个映射也可用于修改环境变量，但并非所有的平台都支持这样做。
+```python
+print(os.environ)
+# environ({'ALLUSERSPROFILE': 'C:\\ProgramData', 'ANDROID_HOME': 'E:\\android-sdk-windows', 'APPDATA': 'C:\\Users\\Administrator\\AppData\\Roaming', 'CATALINA_BASE': 'E:\\apache-tomcat-9.0.2', 'CATALINA_HOME': 'E:\\apache-tomcat-9.0.2', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '132560301740133164', 'CIRRUS_UNINSTALL_EXE': 'E:\\Program Files\\DLP\\dlp3.0\\unins000.exe', 'CLASSPATH': '.;C:\\Program Files\\Java\\jdk1.8.0_241\\lib\\dt.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\lib\\tools.jar;', 'COMMONPROGRAMFILES': 'C:\\Program Files (x86)\\Common Files', 'COMMONPROGRAMFILES(X86)': 'C:\\Program Files (x86)\\Common Files', 'COMMONPROGRAMW6432': 'C:\\Program Files\\Common Files', 'COMPUTERNAME': 'DESKTOP-RMO2H0L', 'COMSPEC': 'C:\\WINDOWS\\system32\\cmd.exe', 'DRIVERDATA': 'C:\\Windows\\System32\\Drivers\\DriverData', 'ERLANG_HOME': 'E:\\Program Files\\erl10.3', 'FPS_BROWSER_APP_PROFILE_STRING': 'Internet Explorer', 'FPS_BROWSER_USER_PROFILE_STRING': 'Default', 'HOMEDRIVE': 'C:', 'HOMEPATH': '\\Users\\Administrator', 'IDEA_INITIAL_DIRECTORY': 'E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\bin', 'INTELLIJ IDEA': 'E:\\Program Files\\JetBrains\\IntelliJ IDEA 2020.2.4\\bin;', 'ITEST_HOME': 'E:\\itestInstalDir\\itest', 'JAVA_HOME': 'C:\\Program Files\\Java\\jdk1.8.0_241', 'JMETER_HOME': 'E:\\zjx\\Jmeter\\Jmeter', 'LANG': 'zh_CN', 'LOCALAPPDATA': 'C:\\Users\\Administrator\\AppData\\Local', 'LOGONSERVER': '\\\\DESKTOP-RMO2H0L', 'MAVEN_HOME': 'E:\\apache-maven-3.0.5', 'MOZ_PLUGIN_PATH': 'E:\\PROGRAM FILES (X86)\\FOXIT SOFTWARE\\FOXIT READER\\plugins\\', 'NUMBER_OF_PROCESSORS': '4', 'NVM_HOME': 'C:\\Users\\Administrator\\AppData\\Roaming\\nvm', 'NVM_SYMLINK': 'E:\\Program Files\\nodejs', 'ONEDRIVE': 'C:\\Users\\Administrator\\OneDrive', 'OS': 'Windows_NT', 'PATH': 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;E:\\Program Files\\Git\\bin;E:\\Program Files\\TortoiseGit\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;E:\\apache-maven-3.0.5\\bin\\;E:\\android-sdk-windows\\platform-tools;E:\\android-sdk-windows\\tools;E:\\MinGW\\bin;C:\\Users\\Administrator\\AppData\\Roaming\\npm;E:\\Program Files\\erl10.3\\bin;E:\\aliyun;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Java\\jdk1.8.0_241\\bin;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\bin;C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin;E:\\zjx\\Jmeter\\Jmeter\\bin;C:\\ProgramData\\chocolatey\\bin;C:\\Users\\Administrator\\AppData\\Roaming\\nvm;E:\\Program Files\\nodejs;E:\\allure-2.13.8\\bin;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python38\\Scripts\\;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python38\\;E:\\Programs\\Python\\Python38-32\\Scripts\\;E:\\Programs\\Python\\Python38-32\\;C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;E:\\Users\\Administrator\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Fiddler;E:\\Program Files (x86)\\Atmel\\Flip 3.4.7\\bin;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;E:\\Program Files\\JetBrains\\IntelliJ IDEA 2020.2.4\\bin;;C:\\Users\\Administrator\\AppData\\Roaming\\nvm;E:\\Program Files\\nodejs;', 'PATHEXT': '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW', 'PROCESSOR_ARCHITECTURE': 'x86', 'PROCESSOR_ARCHITEW6432': 'AMD64', 'PROCESSOR_IDENTIFIER': 'Intel64 Family 6 Model 142 Stepping 9, GenuineIntel', 'PROCESSOR_LEVEL': '6', 'PROCESSOR_REVISION': '8e09', 'PROGRAMDATA': 'C:\\ProgramData', 'PROGRAMFILES': 'C:\\Program Files (x86)', 'PROGRAMFILES(X86)': 'C:\\Program Files (x86)', 'PROGRAMW6432': 'C:\\Program Files', 'PSMODULEPATH': 'C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules\\;C:\\Program Files\\Intel\\;C:\\Program Files\\Intel\\Wired Networking\\', 'PUBLIC': 'C:\\Users\\Public', 'PYCHARM_DISPLAY_PORT': '63342', 'PYCHARM_HOSTED': '1', 'PYTHONIOENCODING': 'UTF-8', 'PYTHONPATH': 'E:\\zjx\\PycharmProjects\\LearnPython;E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\plugins\\python\\helpers\\pycharm_matplotlib_backend;E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\plugins\\python\\helpers\\pycharm_display', 'PYTHONUNBUFFERED': '1', 'SESSIONNAME': 'Console', 'SYSTEMDRIVE': 'C:', 'SYSTEMROOT': 'C:\\WINDOWS', 'TEMP': 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp', 'TMP': 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp', 'ULTRAMON_LANGDIR': 'C:\\Program Files\\UltraMon\\Resources\\cn', 'USERDOMAIN': 'DESKTOP-RMO2H0L', 'USERDOMAIN_ROAMINGPROFILE': 'DESKTOP-RMO2H0L', 'USERNAME': 'Administrator', 'USERPROFILE': 'C:\\Users\\Administrator', 'VS140COMNTOOLS': 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools\\', 'WINDIR': 'C:\\WINDOWS'})
+
+# 获取名为JAVA_HOME的环境变量
+print(os.environ['JAVA_HOME'])
+# C:\Program Files\Java\jdk1.8.0_241
+```
+
+函数os.system用于运行外部程序。还有其他用于执行外部程序的函数，如execv和popen。前
+者退出Python解释器，并将控制权交给被执行的程序，而后者创建一个到程序的连接（这个连接
+类似于文件）。
+> 提示 请参阅模块subprocess，它融合了模块os.system以及函数execv和popen的功能
+
+变量os.sep是用于路径名中的分隔符。
+在UNIX（以及macOS的命令行Python版本）中，标准
+分隔符为/。在Windows中，标准分隔符为\\（这种Python语法表示单个反斜杠）。
+（在有些平台中， os.altsep包含替代路径分隔符，如Windows中的/。）
+```python
+print(repr(os.sep))  # '\\'
+```
+
+可使用os.pathsep来组合多条路径， 就像PYTHONPATH中那样。 pathsep用于分隔不同的路径名：
+在UNIX/macOS中为:，而在Windows中为;。
+
+变量os.linesep是用于文本文件中的行分隔符：在UNIX/OS X中为单个换行符（\n），在
+Windows中为回车和换行符（\r\n）。
+
+函数urandom使用随系统而异的“真正”（至少是强加密）随机源。如果平台没有提供这样的
+随机源，将引发NotImplementedError异常。
+
+### 10.3.3 fileinput
+模块fileinput让你能够轻松地迭代一系列文本文件中的所有行。如果这样调用脚本
+```shell
+python some_script.py file1.txt file2.txt file3.txt
+```
+就能够依次迭代文件file1.txt到file3.txt中的行。
+你还可在UNIX管道中对使用UNIX标准命令cat提供给标准输入（sys.stdin）的行进行迭代。
+```shell
+$ cat file.txt | python some_script.py
+```
+如果使用模块fileinput，在UNIX管道中使用cat调用脚本的效果将与以命令行参数的方式向脚本提供文件名一样。
+
+|函数/变量|描述|
+|---|---|
+|input([files[, inplace[, backup]]])|帮助迭代多个输入流中的行|
+|filename()|返回当前文件的名称|
+|lineno()| 返回（累计的）当前行号|
+|filelineno()| 返回在当前文件中的行号|
+|isfirstline()| 检查当前行是否是文件中的第一行|
+|isstdin()| 检查最后一行是否来自sys.stdin|
+|nextfile()| 关闭当前文件并移到下一个文件|
+|close()| 关闭序列|
+
+fileinput.input是其中最重要的函数，它返回一个可在for循环中进行迭代的对象。如果要
+覆盖默认行为（确定要迭代哪些文件），可以序列的方式向这个函数提供一个或多个文件名。还
+可将参数inplace设置为True（inplace=True），这样将就地进行处理。对于你访问的每一行，都
+需打印出替代内容，这些内容将被写回到当前输入文件中。就地进行处理时，可选参数backup用
+于给从原始文件创建的备份文件指定扩展名。
+
+函数fileinput.filename返回当前文件（即当前处理的行所属文件）的文件名。
+
+函数fileinput.lineno返回当前行的编号。这个值是累计的，因此处理完一个文件并接着处
+理下一个文件时，不会重置行号，而是从前一个文件最后一行的行号加1开始。
+
+函数fileinput.filelineno返回当前行在当前文件中的行号。每次处理完一个文件并接着处
+理下一个文件时，将重置这个行号并从1重新开始。
+
+函数fileinput.isfirstline在当前行为当前文件中的第一行时返回True，否则返回False。
+
+函数fileinput.isstdin在当前文件为sys.stdin时返回True，否则返回False。
+
+函数fileinput.nextfile关闭当前文件并跳到下一个文件，且计数时忽略跳过的行。这在你
+知道无需继续处理当前文件时很有用。
+
+函数fileinput.close关闭整个文件链并结束迭代。
+
+demo:给Python脚本添加行号
+```python
+# 给python脚本结尾增加行号                            
+import fileinput                             
+for line in fileinput.input(inplace=True):   
+    line = line.rstrip()                     
+    num = fileinput.lineno()                 
+    print('{:<50} # {:2d}'.format(line, num))
+```
