@@ -362,3 +362,154 @@ for line in fileinput.input(inplace=True):
     num = fileinput.lineno()                 
     print('{:<50} # {:2d}'.format(line, num))
 ```
+
+### 10.3.4 集合、堆和双端队列
+1. 集合  
+集合是由内置类set实现的，所以无需导入模块sets
+   
+```shell
+set(range(10))
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+```
+可使用序列（或其他可迭代对象）来创建集合，也可以用花括号显式地指定。但是不能用花括号来创建空集合，因为那样会创建一个空字典。
+```shell
+type({})
+<class 'dict'>
+```
+集合主要用于成员资格检查，因此将忽略 重复的元素:
+```shell
+ >>> {0, 1, 2, 3, 0, 1, 2, 3, 4, 5}
+{0, 1, 2, 3, 4, 5}
+```
+
+与字典一样，集合中元素的排列顺序是不确定的，因此不能依赖于这一点。
+```shell
+>>> {'fee', 'fie', 'foe'} 
+{'foe', 'fee', 'fie'}
+```
+除此之外，还可以执行各种标准集合操作（比如交集和并集）计算并集可以对一个集合调用方法union，或者使用按位或操作符`|`
+```shell
+a = {1, 2, 3}
+b = {2, 3, 4}
+a.union(b)
+{1, 2, 3, 4}
+a | b
+{1, 2, 3, 4}
+```
+一些其他的方法
+```shell
+# 取交集
+c = a & b
+c
+{2, 3}
+
+# 判断是否是子集
+c.issubset(a)
+True
+c <= a
+True
+
+# 判断是否是超集
+c.issuperset(a)
+False
+c >= a
+False
+
+# 取交集
+a.intersection(b)
+{2, 3}
+a & b
+{2, 3}
+
+# 差集，即返回的集合元素包含在第一个集合中，但不包含在第二个集合(方法的参数)中。
+a.difference(b)
+{1}
+a - b
+{1}
+
+# 两个集合中不重复的元素集合，即会移除两个集合中都存在的元素。
+a.symmetric_difference(b)
+{1, 4}
+a ^ b
+{1, 4}
+
+# 拷贝一个集合
+a.copy()
+{1, 2, 3}
+a.copy() is a
+False
+```
+集合是可变的，因此不能用作字典中的键。另一个问题是，集合只能包含不可变(可散列) 的值，因此不能包含其他集合。由于在现实世界中经常会遇到集合的集合，因此这可能是个问题。 所幸还有frozenset类型，它表示不可变(可散列)的集合。
+```shell
+>>> a = set()
+>>> b = set()
+>>> a.add(b)
+Traceback (most recent call last):
+File "<stdin>", line 1, in ? TypeError: set objects are unhashable >>> a.add(frozenset(b))
+```
+构造函数frozenset创建给定集合的副本。在需要将集合作为另一个集合的成员或字典中的键时，frozenset很有用。
+
+2. 堆  
+堆是一种优先队列。
+   
+优先队列让你能够以任意顺序添加对象，并随时(可能是在两次添加对象之间)找出(并删除)最小的元素。
+   
+Python没有独立的堆类型，而只有一个包含一些堆操作函数的模块。这个模块名为 heapq(其中的q表示队列)，它包含6个函数(如表10-5所示)，其中前4个与堆操作直接相关。必须使用列表来表示堆对象本身。
+
+|函数|描述|
+|---|---|
+|heappush(heap, x)|将x压入堆中|
+|heappop(heap)|从堆中弹出最小的元素|
+|heapify(heap)|让列表具备堆特征|
+|heapreplace(heap, x)|弹出最小的元素，并将x压入堆中|
+|nlargest(n, iter)|返回iter中n个最大的元素|
+|nsmallest(n, iter)|返回iter中n个最小的元素|
+
+函数heappush用于在堆中添加一个元素。请注意，不能将它用于普通列表，而只能用于使用各种堆函数创建的列表。原因是元素的顺序很重要(虽然元素的排列顺序看起来有点随意，并没有严格地排序)。
+```shell
+from heapq import *
+from random import shuffle
+data = list(range(10))
+heap = []
+for n in data:
+    heappush(heap, n)
+    
+heap
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+heappush(heap, 0.5)
+heap
+[0, 0.5, 2, 3, 1, 5, 6, 7, 8, 9, 4]
+```
+元素的排列顺序并不像看起来那么随意。它们虽然不是严格排序的，但必须保证一点:位置i处的元素总是大于位置i // 2处的元素(反过来说就是小于位置2 * i和2 * i + 1处的元素)。这是底层堆算法的基础，称为**堆特征(heap property)**。
+
+函数heappop弹出最小的元素(总是位于索引0处)，并确保剩余元素中最小的那个位于索引0 处(保持堆特征)。虽然弹出列表中第一个元素的效率通常不是很高，但这不是问题，因为heappop 会在幕后做些巧妙的移位操作。
+```shell
+heappop(heap)
+0
+
+heappop(heap)
+0.5
+
+heap
+[1, 3, 2, 7, 4, 5, 6, 9, 8]
+```
+函数heapify通过执行尽可能少的移位操作将列表变成合法的堆(即具备堆特征)。如果你的 堆并不是使用heappush创建的，应在使用heappush和heappop之前使用这个函数。
+```shell
+>>> heap = [5, 8, 0, 3, 6, 7, 9, 1, 4, 2] >>> heapify(heap)
+>>> heap
+[0, 1, 5, 3, 2, 7, 9, 8, 4, 6]
+```
+
+函数heapreplace用得没有其他函数那么多。它从堆中弹出最小的元素，再压入一个新元素。 相比于依次执行函数heappop和heappush，这个函数的效率更高。
+```shell
+>>> heapreplace(heap, 0.5)
+0
+>>> heap
+[0.5, 1, 5, 3, 2, 7, 9, 8, 4, 6]
+>>> heapreplace(heap, 10)
+0.5
+>>> heap
+[1, 2, 5, 3, 6, 7, 9, 8, 4, 10]
+```
+
+nlargest(n, iter)和nsmallest(n, iter)，:分别用于找出可迭代对象iter中最大和最小的n个元素。这种任务也可通过先排序(如使用函数sorted)再切片来完成，但堆算法的速度更快，使用的内存更少(而且使用起来也更容易)。
