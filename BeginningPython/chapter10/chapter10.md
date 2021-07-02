@@ -513,3 +513,46 @@ heap
 ```
 
 nlargest(n, iter)和nsmallest(n, iter)，:分别用于找出可迭代对象iter中最大和最小的n个元素。这种任务也可通过先排序(如使用函数sorted)再切片来完成，但堆算法的速度更快，使用的内存更少(而且使用起来也更容易)。
+
+3. 双端队列
+
+在需要按添加元素的顺序进行删除时，双端队列很有用。在模块collection中，包含类型deque以及其他几个集合类型。
+
+双端队列也是从可迭代对象创建的。
+```python
+from collections import deque
+q = deque(range(5))
+q.append(5)
+q.appendleft(6)
+q
+# deque([6, 0, 1, 2, 3, 4, 5])
+q.pop()
+# 5
+q.popleft()
+# 6
+
+q
+# deque([0, 1, 2, 3, 4])
+q.rotate(3) # 向右旋转元素
+q
+# deque([2, 3, 4, 0, 1])
+q.rotate(-1)
+q
+# deque([3, 4, 0, 1, 2])
+```
+双端队列支持在左侧高效地附加和弹出元素，而列表却不支持。还可以高效得旋转元素（将元素左移或右移）。
+
+双端队列对象还包含方法extend和extendleft，其中extend类似于相应的列表方法，而extendleft类似于
+appendleft。请注意，用于extendleft的可迭代对象中的元素将按相反的顺序出现在双端队列中。
+```python
+q
+# deque([3, 4, 0, 1, 2])
+q.extend([7, 8, 9])
+q
+# deque([3, 4, 0, 1, 2, 7, 8, 9])
+
+# 用于extendleft的可迭代对象中的元素将按相反的顺序出现在双端队列中。
+q.extendleft([5, 6, 7])
+q
+# deque([7, 6, 5, 3, 4, 0, 1, 2, 7, 8, 9])
+```
