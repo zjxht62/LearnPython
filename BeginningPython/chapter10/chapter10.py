@@ -77,7 +77,29 @@ print(os.environ)
 # environ({'ALLUSERSPROFILE': 'C:\\ProgramData', 'ANDROID_HOME': 'E:\\android-sdk-windows', 'APPDATA': 'C:\\Users\\Administrator\\AppData\\Roaming', 'CATALINA_BASE': 'E:\\apache-tomcat-9.0.2', 'CATALINA_HOME': 'E:\\apache-tomcat-9.0.2', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '132560301740133164', 'CIRRUS_UNINSTALL_EXE': 'E:\\Program Files\\DLP\\dlp3.0\\unins000.exe', 'CLASSPATH': '.;C:\\Program Files\\Java\\jdk1.8.0_241\\lib\\dt.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\lib\\tools.jar;', 'COMMONPROGRAMFILES': 'C:\\Program Files (x86)\\Common Files', 'COMMONPROGRAMFILES(X86)': 'C:\\Program Files (x86)\\Common Files', 'COMMONPROGRAMW6432': 'C:\\Program Files\\Common Files', 'COMPUTERNAME': 'DESKTOP-RMO2H0L', 'COMSPEC': 'C:\\WINDOWS\\system32\\cmd.exe', 'DRIVERDATA': 'C:\\Windows\\System32\\Drivers\\DriverData', 'ERLANG_HOME': 'E:\\Program Files\\erl10.3', 'FPS_BROWSER_APP_PROFILE_STRING': 'Internet Explorer', 'FPS_BROWSER_USER_PROFILE_STRING': 'Default', 'HOMEDRIVE': 'C:', 'HOMEPATH': '\\Users\\Administrator', 'IDEA_INITIAL_DIRECTORY': 'E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\bin', 'INTELLIJ IDEA': 'E:\\Program Files\\JetBrains\\IntelliJ IDEA 2020.2.4\\bin;', 'ITEST_HOME': 'E:\\itestInstalDir\\itest', 'JAVA_HOME': 'C:\\Program Files\\Java\\jdk1.8.0_241', 'JMETER_HOME': 'E:\\zjx\\Jmeter\\Jmeter', 'LANG': 'zh_CN', 'LOCALAPPDATA': 'C:\\Users\\Administrator\\AppData\\Local', 'LOGONSERVER': '\\\\DESKTOP-RMO2H0L', 'MAVEN_HOME': 'E:\\apache-maven-3.0.5', 'MOZ_PLUGIN_PATH': 'E:\\PROGRAM FILES (X86)\\FOXIT SOFTWARE\\FOXIT READER\\plugins\\', 'NUMBER_OF_PROCESSORS': '4', 'NVM_HOME': 'C:\\Users\\Administrator\\AppData\\Roaming\\nvm', 'NVM_SYMLINK': 'E:\\Program Files\\nodejs', 'ONEDRIVE': 'C:\\Users\\Administrator\\OneDrive', 'OS': 'Windows_NT', 'PATH': 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;E:\\Program Files\\Git\\bin;E:\\Program Files\\TortoiseGit\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;E:\\apache-maven-3.0.5\\bin\\;E:\\android-sdk-windows\\platform-tools;E:\\android-sdk-windows\\tools;E:\\MinGW\\bin;C:\\Users\\Administrator\\AppData\\Roaming\\npm;E:\\Program Files\\erl10.3\\bin;E:\\aliyun;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Java\\jdk1.8.0_241\\bin;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\bin;C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin;E:\\zjx\\Jmeter\\Jmeter\\bin;C:\\ProgramData\\chocolatey\\bin;C:\\Users\\Administrator\\AppData\\Roaming\\nvm;E:\\Program Files\\nodejs;E:\\allure-2.13.8\\bin;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python38\\Scripts\\;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python38\\;E:\\Programs\\Python\\Python38-32\\Scripts\\;E:\\Programs\\Python\\Python38-32\\;C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;E:\\Users\\Administrator\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Administrator\\AppData\\Local\\Programs\\Fiddler;E:\\Program Files (x86)\\Atmel\\Flip 3.4.7\\bin;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;E:\\Program Files\\JetBrains\\IntelliJ IDEA 2020.2.4\\bin;;C:\\Users\\Administrator\\AppData\\Roaming\\nvm;E:\\Program Files\\nodejs;', 'PATHEXT': '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW', 'PROCESSOR_ARCHITECTURE': 'x86', 'PROCESSOR_ARCHITEW6432': 'AMD64', 'PROCESSOR_IDENTIFIER': 'Intel64 Family 6 Model 142 Stepping 9, GenuineIntel', 'PROCESSOR_LEVEL': '6', 'PROCESSOR_REVISION': '8e09', 'PROGRAMDATA': 'C:\\ProgramData', 'PROGRAMFILES': 'C:\\Program Files (x86)', 'PROGRAMFILES(X86)': 'C:\\Program Files (x86)', 'PROGRAMW6432': 'C:\\Program Files', 'PSMODULEPATH': 'C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules\\;C:\\Program Files\\Intel\\;C:\\Program Files\\Intel\\Wired Networking\\', 'PUBLIC': 'C:\\Users\\Public', 'PYCHARM_DISPLAY_PORT': '63342', 'PYCHARM_HOSTED': '1', 'PYTHONIOENCODING': 'UTF-8', 'PYTHONPATH': 'E:\\zjx\\PycharmProjects\\LearnPython;E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\plugins\\python\\helpers\\pycharm_matplotlib_backend;E:\\Program Files\\JetBrains\\PyCharm 2021.1.2\\plugins\\python\\helpers\\pycharm_display', 'PYTHONUNBUFFERED': '1', 'SESSIONNAME': 'Console', 'SYSTEMDRIVE': 'C:', 'SYSTEMROOT': 'C:\\WINDOWS', 'TEMP': 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp', 'TMP': 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp', 'ULTRAMON_LANGDIR': 'C:\\Program Files\\UltraMon\\Resources\\cn', 'USERDOMAIN': 'DESKTOP-RMO2H0L', 'USERDOMAIN_ROAMINGPROFILE': 'DESKTOP-RMO2H0L', 'USERNAME': 'Administrator', 'USERPROFILE': 'C:\\Users\\Administrator', 'VS140COMNTOOLS': 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools\\', 'WINDIR': 'C:\\WINDOWS'})
 
 # 获取名为JAVA_HOME的环境变量
-print(os.environ['JAVA_HOME'])
+# print(os.environ['JAVA_HOME'])
 # C:\Program Files\Java\jdk1.8.0_241
 
 print(repr(os.sep))  # '\\'
+
+from random import *
+from time import *
+# 定义时间下限
+date1 = (2021, 1, 1, 0, 0, 0, -1, -1, -1)
+# 元组转为秒数
+time1 = mktime(date1)
+date2 = (2022, 1, 1, 0, 0, 0, -1, -1, -1)
+time2 = mktime(date2)
+
+random_time = uniform(time1, time2)
+
+#秒数转为当地时间元组，再转换为字符串
+print(asctime(localtime(random_time)))
+
+from random import randrange
+num = int(input('有多少个骰子?'))
+sides = int(input('骰子有多少个面?'))
+sum = 0
+for i in range(num):
+    sum += randrange(sides) + 1
+print('结果是：', sum)
