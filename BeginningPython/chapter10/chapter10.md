@@ -778,3 +778,85 @@ for i in range(num):
 print('结果是：', sum)
 ```
 
+### 10.3.7 shelve和json
+模块shelve可以将Python中的任意对象持久化。以一种类似字典的形式存储起来。
+
+但是在使用的时候不同于字典，它的键必须是str
+```shell
+import shelve
+s = shelve.open('test.dat')
+s['x']=['a', 'b', 'c']
+s['x'].append('d') # 此处是获取了存储的副本，但是并没有保存修改
+s['x']
+['a', 'b', 'c']
+```
+正确做法：将获取的副本赋给一个临时变量，并在修改这个副本后再次存储：
+```shell
+s['x']
+['a', 'b', 'c']
+temp = s['x']
+temp.append('d')
+s['x'] = temp
+s['x']
+['a', 'b', 'c', 'd']
+```
+还有另一种避免这个问题的办法：将函数open的参数writeback设置为True。这样，从shelf
+对象读取或赋给它的所有数据结构都将保存到内存（缓存）中，并等到你关闭shelf对象时才将
+它们写入磁盘中。
+
+
+一个简单的数据库程序
+```shell
+import sys, shelve
+
+def store_person(db):
+    """
+    让用户输入数据并将其存储到shelve对象
+    :param db:
+    :return:
+    """
+    pid = input('Enter unique ID number: ')
+    person = {}
+    person['name'] = input('Enter name: ')
+    person['age'] = input('Enter age: ')
+    person['phone'] = input('Enter phone number: ')
+    db[pid] = person
+
+def lookup_person(db):
+    pid = input('Enter ID number: ')
+    field = input('What would you like to know? (name, age, phone) ')
+    #删除字符串开头和结尾的空格，并转为小写
+    field = field.strip().lower()
+    print(field.capitalize() + ':', db[pid][field])
+
+def print_help():
+    print('The available commands are:')
+    print('store : Stores information about a person')
+    print('lookup : Looks up a person from ID number')
+    print('quit : Save changes and exit')
+    print('? : Prints this message')
+
+def enter_command():
+    cmd = input('Enter command (? for help): ')
+    cmd = cmd.strip().lower()
+    return cmd
+
+def main():
+    database = shelve.open('aaa.dat')
+    try:
+        while True:
+            cmd = enter_command()
+            if cmd == 'store':
+                store_person(database)
+            elif cmd == 'lookup':
+                lookup_person(database)
+            elif cmd == '?':
+                print_help()
+            elif cmd == 'quit':
+                return
+    finally:
+        database.close()
+
+if __name__ == '__main__':
+    main()
+```
