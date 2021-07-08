@@ -135,3 +135,8 @@ text = 'Dear {name}...'
 print(pat.sub('吉祥', text))  # Dear 吉祥...
 
 print(re.escape('www.python.org'))  # www\.python\.org
+
+some_string = 'There was a wee cooper who lived in Fyfe'
+pat = re.compile('There (was a (wee) (cooper)) who (lived in Fyfe)')
+print(pat.match(some_string).group()) # There was a wee cooper who lived in Fyfe
+print(pat.match(some_string).group(1, 2)) # ('was a wee cooper', 'wee')
