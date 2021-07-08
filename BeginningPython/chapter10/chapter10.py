@@ -96,10 +96,16 @@ random_time = uniform(time1, time2)
 #秒数转为当地时间元组，再转换为字符串
 print(asctime(localtime(random_time)))
 
-from random import randrange
-num = int(input('有多少个骰子?'))
-sides = int(input('骰子有多少个面?'))
-sum = 0
-for i in range(num):
-    sum += randrange(sides) + 1
-print('结果是：', sum)
+# from random import randrange
+# num = int(input('有多少个骰子?'))
+# sides = int(input('骰子有多少个面?'))
+# sum = 0
+# for i in range(num):
+#     sum += randrange(sides) + 1
+# print('结果是：', sum)
+
+
+some_string = 'There was a wee cooper who lived in Fyfe'
+pat = re.compile('There (was a (wee) (cooper)) who (lived in Fyfe)')
+print(pat.match(some_string).group()) # There was a wee cooper who lived in Fyfe
+print(pat.match(some_string).group(1, 2)) # ('was a wee cooper', 'wee')

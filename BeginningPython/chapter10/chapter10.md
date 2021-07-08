@@ -860,3 +860,59 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+
+3. 匹配对象和编组
+
+在re模块中，查找与模式匹配的函数都在找到时返回MatchObject对象。这种对象包含与模式匹配的子串的信息，还包含模式的哪部分与子串的哪部分匹配的信息。 
+这些子串部分称为**编组(group)**
+
+编组就是放在圆括号里面的子模式，是根据左边的括号数编号的，编组0指的是整个模式。
+```
+'There (was a (wee) (cooper)) who (lived in Fyfe)'
+# 包含以下编组
+# 0：There was a wee cooper who lived in Fyfe
+# 1：was a wee cooper
+# 2：wee
+# 3：cooper
+# 4：lived in Fyfe
+```
+通过编组，可以获取到子模式匹配出来的内容。  
+下表描述了re匹配对象的一些重要方法
+
+|函数|描述|
+|---|---|
+|group([group1, ...])|获取与给定子模式（编组）匹配的子串|
+|start([group])|返回与给定编组匹配的子串的起始位置|
+|end([group])|返回与给定编组匹配的子串的终止位置（与切片一样，不包含终止位置）|
+|span([group])|返回与给定编组匹配的子串的起始和终止位置|
+
+方法group返回与模式中给定编组匹配的子串。如果没有指定编组号，则默认为0。如果只指
+定了一个编组号（或使用默认值0），将只返回一个字符串；否则返回一个元组，其中包含与给定
+编组匹配的子串。
+```python
+some_string = 'There was a wee cooper who lived in Fyfe'
+pat = re.compile('There (was a (wee) (cooper)) who (lived in Fyfe)')
+print(pat.match(some_string).group()) # There was a wee cooper who lived in Fyfe
+print(pat.match(some_string).group(1, 2)) # ('was a wee cooper', 'wee')
+```
+> 注意 除整个模式（编组0）外，最多还可以有99个编组，编号为1~99。
+
+方法start返回与给定编组（默认为0，即整个模式）匹配的子串的起始索引。  
+
+方法end类似于start，但返回终止索引加1  
+
+方法span返回一个元组，其中包含与给定编组（默认为0，即整个模式）匹配的子串的起始索引和终止索引。  
+
+示例
+```shell
+>>> m = re.match(r'www\.(.*)\..{3}', 'www.python.org')
+>>> m.group(1)
+'python'
+>>> m.start(1)
+4
+>>> m.end(1)
+10
+>>> m.span(1)
+(4, 10)
+```
