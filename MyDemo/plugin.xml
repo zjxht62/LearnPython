@@ -1,0 +1,22 @@
+<org.jenkinsci.plugins.postbuildscript.PostBuildScript plugin="postbuildscript@2.7.0">
+    <config>
+        <scriptFiles/>
+        <groovyScripts/>
+        <buildSteps>
+            <org.jenkinsci.plugins.postbuildscript.model.PostBuildStep>
+                <results>
+                    <string>SUCCESS</string>
+                </results>
+                <role>BOTH</role>
+                <buildSteps>
+                    <hudson.tasks.Shell>
+                        <command>cd /home/hudson/.jenkins/script/scm/git
+                            python3 jenkins_venv.py ${JOB_NAME}
+                        </command>
+                    </hudson.tasks.Shell>
+                </buildSteps>
+            </org.jenkinsci.plugins.postbuildscript.model.PostBuildStep>
+        </buildSteps>
+        <markBuildUnstable>true</markBuildUnstable>
+    </config>
+</org.jenkinsci.plugins.postbuildscript.PostBuildScript>
