@@ -1070,3 +1070,66 @@ print(pat.match(some_string).group(1, 2)) # ('was a wee cooper', 'wee')
 >>> m.span(1)
 (4, 10)
 ```
+
+4. 替换中的组号和函数
+   
+利用re.sub的强大功能，可以在替换字符串中使用组号。在替换字符串中，任何类似于'\\n'的转义序列都将被替换为与模式中编组n匹配的字符串。
+
+举例
+```python
+
+emphasis_pattern = re.compile(r'\*([^/*]+)\*')
+# 其中里面的\1将变成模式匹配的编号为1的编组匹配的字符串
+print(emphasis_pattern.sub(r'<em>\1</em>', 'Hello, *World*!')) # Hello, <em>World</em>!
+```   
+通过将函数用作替换内容，可执行更复杂的替换。这个函数将MatchObject作为唯一 的参数，
+它返回的字符串将用作替换内容。换而言之，你可以对匹配的字符串做任何处理，并通过细致的处理来生成替换内容。
+
+> 贪婪和非贪婪模式  
+> 重复运算符默认是贪婪的，它们将匹配尽可能多的内容。  
+> 对于所有的重复运算符，都可在后面加上问号来将其指定为非贪婪的。
+
+5. 示例：找出发件人
+
+比如有这样一组虚构的邮件头
+```text
+From foo@bar.baz Thu Dec 20 01:22:50 2008
+Return-Path: <foo@bar.baz>
+Received: from xyzzy42.bar.com (xyzzy.bar.baz [123.456.789.42])
+by frozz.bozz.floop (8.9.3/8.9.3) with ESMTP id BAA25436
+for <magnus@bozz.floop>; Thu, 20 Dec 2004 01:22:50 +0100 (MET) Received: from [43.253.124.23] by bar.baz
+(InterMail vM.4.01.03.27 201-229-121-127-20010626) with ESMTP
+id <20041220002242.ADASD123.bar.baz@[43.253.124.23]>; Thu, 20 Dec 2004 00:22:42 +0000 User-Agent: Microsoft-Outlook-Express-Macintosh-Edition/5.02.2022
+Date: Wed, 19 Dec 2008 17:22:42 -0700
+Subject: Re: Spam
+From: Foo Fie <foo@bar.baz>
+To: Magnus Lie Hetland <magnus@bozz.floop>
+CC: <Mr.Gumby@bar.baz>
+Message-ID: <B8467D62.84F%foo@baz.com>
+In-Reply-To: <20041219013308.A2655@bozz.floop> Mime- version: 1.0 Content-type: text/plain; charset="US-ASCII" Content-transfer-encoding: 7bit Status: RO
+Content-Length: 55
+Lines: 6
+So long, and thanks for all the spam!
+Yours, Foo Fie
+```
+我们来尝试找出这封邮件的发件人。
+可以发现发件人都是以From：开头的那一行，所以可以通过正则表达式加fileinput模块处理
+```python
+# 找出所有发件人
+import fileinput, re
+
+pat = re.compile(r'From: (.*) <.*?>$')
+for line in fileinput.input():
+    m = pat.match(line)
+    if m:
+        print(m.group(1))
+
+# 找出所有邮件地址
+pat = re.compile(r'[a-z\-\.]+@[a-z\-\.]+', re.IGNORECASE) 
+addresses = set()
+for line in fileinput.input():
+    for address in pat.findall(line):
+        addresses.add(address) 
+for address in sorted(addresses):
+    print(address)
+```

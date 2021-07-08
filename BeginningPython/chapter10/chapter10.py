@@ -140,3 +140,7 @@ some_string = 'There was a wee cooper who lived in Fyfe'
 pat = re.compile('There (was a (wee) (cooper)) who (lived in Fyfe)')
 print(pat.match(some_string).group()) # There was a wee cooper who lived in Fyfe
 print(pat.match(some_string).group(1, 2)) # ('was a wee cooper', 'wee')
+
+
+emphasis_pattern = re.compile(r'\*([^/*]+)\*')
+print(emphasis_pattern.sub(r'<em>\1</em>', 'Hello, *World*!')) # Hello, <em>World</em>!
