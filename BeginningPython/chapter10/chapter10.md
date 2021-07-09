@@ -1133,3 +1133,88 @@ for line in fileinput.input():
 for address in sorted(addresses):
     print(address)
 ```
+
+6. 模板系统示例
+
+模板（template）是一种文件，可在其中插入具体的值来得到最终的文本。
+
+比如下面的模板
+```text
+[x = 2]
+[y = 3]
+The sum of [x] and [y] is [x + y].
+```
+执行后应该输出
+```text
+The sum of 2 and 3 is 5.
+```
+实现逻辑的Python脚本
+```python
+import fileinput, re
+# 与使用方括号括起的字段匹配
+field_pat = re.compile(r'\[(.+?)\]')
+# 我们将把变量收集到这里：
+scope = {}
+# 用于re.sub函数的一个入参，用来指定如何处理匹配的编组
+def replacement(match):
+    code = match.group(1)
+    try:
+        # 如果字段为表达式（比如x+y），就返回其结果：
+        return str(eval(code, scope))
+    except SyntaxError:
+        # 否则在当前作用域内执行该赋值语句
+        exec(code, scope)
+        # 并返回一个空字符串
+        return ''
+# 获取所有文本并合并成一个字符串：
+#（还可采用其他办法来完成这项任务，详情请参见第11章）
+lines = []
+for line in fileinput.input():
+    lines.append(line)
+text = ''.join(lines)
+# 替换所有与字段模式匹配的内容：
+print(field_pat.sub(replacement, text))
+```
+运行
+```shell
+$ python BeginningPython/chapter10/templates.py BeginningPython/chapter10/test_template.txt
+
+The sum of 2 and 3 is 5.
+```
+
+### 10.3.9 其他有趣的标准模块
++ argparse：在UNIX中，运行命令行程序时常常需要指定各种选项（开关）， Python解释器
+就是这样的典范。这些选项都包含在sys.argv中，但要正确地处理它们绝非容易。模块
+argparse使得提供功能齐备的命令行界面易如反掌。
++ cmd：这个模块让你能够编写类似于Python交互式解释器的命令行解释器。你可定义命令，
+让用户能够在提示符下执行它们。或许可使用这个模块为你编写的程序提供用户界面？
++ csv： CSV指的是逗号分隔的值（comma-seperated values），很多应用程序（如很多电子表
+格程序和数据库程序）都使用这种简单格式来存储表格数据。这种格式主要用于在不同
+的程序之间交换数据。模块csv让你能够轻松地读写CSV文件，它还以非常透明的方式处
+理CSV格式的一些棘手部分。
++ datetime：如果模块time不能满足你的时间跟踪需求，模块datetime很可能能够满足。
+datetime支持特殊的日期和时间对象，并让你能够以各种方式创建和合并这些对象。相比
+于模块time，模块datetime的接口在很多方面都更加直观。
++ difflib：这个库让你能够确定两个序列的相似程度，还让你能够从很多序列中找出与指
+定序列最为相似的序列。例如，可使用difflib来创建简单的搜索程序。
++ enum：枚举类型是一种只有少数几个可能取值的类型。很多语言都内置了这样的类型，如
+果你在使用Python时需要这样的类型，模块enum可提供极大的帮助。
++ functools：这个模块提供的功能是，让你能够在调用函数时只提供部分参数（部分求值，
+partial evaluation），以后再填充其他的参数。在Python 3.0中，这个模块包含filter和reduce。
++ hashlib：使用这个模块可计算字符串的小型“签名”（数）。计算两个不同字符串的签名
+时，几乎可以肯定得到的两个签名是不同的。你可使用它来计算大型文本文件的签名，
+这个模块在加密和安全领域有很多用途①。
++ itertools：包含大量用于创建和合并迭代器（或其他可迭代对象）的工具，其中包括可
+以串接可迭代对象、创建返回无限连续整数的迭代器（类似于range，但没有上限）、反复
+遍历可迭代对象以及具有其他作用的函数。
++ logging：使用print语句来确定程序中发生的情况很有用。要避免跟踪时出现大量调试输
+出，可将这些信息写入日志文件中。这个模块提供了一系列标准工具，可用于管理一个
+或多个中央日志，它还支持多种优先级不同的日志消息。
++ statistics：计算一组数的平均值并不那么难，但是要正确地获得中位数，以确定总体标
+准偏差和样本标准偏差之间的差别，即便对于偶数个元素来说，也需要费点心思。在这
+种情况下，不要手工计算，而应使用模块statistics！
++ timeit、 profile和trace：模块timeit（和配套的命令行脚本）是一个测量代码段执行时
+间的工具。这个模块暗藏玄机，度量性能时你可能应该使用它而不是模块time。模块
+profile（和配套模块pstats）可用于对代码段的效率进行更全面的分析。模块trace可帮
+助你进行覆盖率分析（即代码的哪些部分执行了，哪些部分没有执行），这在编写测试代
+码时很有用。

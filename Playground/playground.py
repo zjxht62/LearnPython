@@ -1,8 +1,5 @@
-pat = 'python\\.org'
+scope = {}
 
-print(pat)
-#可以使用原始字符串
-pat = r'python\.org'
+eval('1', scope)
 
-print(pat)
-
+print(scope)

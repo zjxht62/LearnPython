@@ -4,12 +4,12 @@ f = open('somefile.txt')
 # 通过不同的文件模式来指出要对文件进行的操作
 # 这里总结一下w+和r+的不同，w+会删除文件原有的内容，并从头开始写
 # r+也是从头开始写，但是会保留原文件未被覆盖的内容
-f = open('somefile.txt', 'w+')
-f.write("我是w+写入的")
-f.close()
-# f = open('somefile.txt', 'r+')
-# f.write("我是r+写入的")
+# f = open('somefile.txt', 'w+',encoding='utf-8')
+# f.write("我是w+写入的")
 # f.close()
+f = open('somefile.txt', 'r+')
+f.write("我是r+写入的")
+f.close()
 
 f = open('somefile.txt', 'r')
 print(f.read(4))  # 读取四个字符
@@ -23,11 +23,27 @@ f.write('Hello, World!')
 f.close()
 
 f = open('somefile.txt')
-print(f.read())
+print(f.read())  # 01234Hello, World!89
 
 f = open('somefile.txt')
 f.seek(3)
-print(f.tell())
+print(f.tell())  # 3
+
+f = open('somefile1.txt')
+print(repr(f.readline(5)))  # 'First'
+print(repr(f.readline(5)))  # ' line'
+print(repr(f.readline(5)))  # '\n'
+print(repr(f.readline(5)))  # 'Secon'
+print(repr(f.readline(5)))  # 'd lin'
+print(repr(f.readline(5)))  # 'e\n'
+print(repr(f.readline()))  # 'Third and final line\n'
+
+# writelines测试
+lines = ['娃哈哈', '爱呵呵', '诶嘿嘿']
+f = open('demofile.txt', 'w+')
+f.writelines(lines)
+
+
 
 # 使用完文件后要记得close
 # 传统的处理方式
@@ -56,7 +72,7 @@ with open('somefile1.txt') as f:
             break
         process(char)
 
-#每次一行
+# 每次一行
 with open('somefile1.txt') as f:
     while True:
         line = f.readline()
@@ -64,7 +80,7 @@ with open('somefile1.txt') as f:
             break
         process(line)
 
-#如果文件不太大 可以直接读取全部内容进行迭代
+# 如果文件不太大 可以直接读取全部内容进行迭代
 with open('somefile1.txt') as f:
     for char in f.read():
         process(char)
@@ -73,17 +89,17 @@ with open('somefile1.txt') as f:
     for line in f.readlines():
         process(line)
 
-#最常见的方法就是直接迭代文件，文件是可迭代的
+# 最常见的方法就是直接迭代文件，文件是可迭代的
 with open('somefile1.txt') as f:
     for line in f:
         process(line)
 
-#对迭代器做的操作可以用于文件
+# 对迭代器做的操作可以用于文件
 f = open('somefile1.txt', 'w')
 # 使用了print来写入文件，这将自动在提供的字符串后面添加换行符
-print('First' ,'line', file=f)
-print('Second' ,'line', file=f)
-print('Third','and final' ,'line', file=f)
+print('First', 'line', file=f)
+print('Second', 'line', file=f)
+print('Third', 'and final', 'line', file=f)
 f.close()
 lines = list(open('somefile1.txt'))
 print(lines)
