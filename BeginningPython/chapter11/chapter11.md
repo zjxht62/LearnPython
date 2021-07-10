@@ -161,3 +161,186 @@ f.writelines(lines)
 # 文件demofile.txt的内容如下
 # 娃哈哈爱呵呵诶嘿嘿
 ```
+
+### 11.2.4 关闭文件
+别忘了调用方法close关闭文件，虽然，程序在退出时将自动关闭文件对象，但是手动关闭文件没有坏处，在有些操作系统和设置中，还可以
+避免无意义地锁定文件以防修改，另外，这样做还可避免用完系统可能指定的文件打开配额。  
+对于写入过的文件，一定要将其关闭，Python可能缓冲你的数据。如果程序崩溃，数据可能根本不会写入到文件里。  
+要确保文件得以关闭，可使用一条try/finally语句，并在finally子句中调用close。
+```python
+f = open('somefile.txt', 'w')
+try:
+    f.write('')
+finally:
+    f.close()
+```
+有一条专门为此设计的语句，with语句
+```python
+# 使用with语句来将打开的文件赋给somefile变量，在语句体内，可以进行文件操作，到达结尾时将自动关闭文件，即使出现了异常
+with open("somefile.txt", 'r+') as somefile:
+    somefile.read()
+    somefile.write("")
+```
+> 上下文管理器  
+> with语句是一个非常通用的结构，允许你使用所谓的上下文管理器。上下文管理器是支持两个方法的对象：`__enter__`和`__exit__`  
+> 方法`__enter__`不接受任何参数，在with语句时被调用，其返回值赋值给关键字`as`后面的变量  
+> 方法`__exit__`接受三个参数:异常类型、异常对象和异常跟踪。它在离开方法时被调用 (通过前述参数将引发的异常提供给它)。如果`__exit__`返回`False`，将抑制所有的异常。  
+> 文件也可用作上下文管理器。它们的方法__enter__返回文件对象本身，而方法__exit__ 关闭文件。
+
+### 11.2.5 使用文件的基本方法
+```python
+# 文件操作的基本方法
+# read(n)
+f = open('somefile1.txt')
+print(f.read(7))  # Welcome
+print(f.read(4))  # to
+f.close()
+
+# read()
+f = open('somefile1.txt')
+print(f.read())
+# Welcome to this file
+# There is nothing here except
+# This stupid haiku
+f.close()
+
+# readline()
+f = open('somefile1.txt')
+for i in range(3):
+    print(str(i) + ': ' + f.readline(), end="")
+f.close()
+# 0: Welcome to this file
+# 1: There is nothing here except
+# 2: This stupid haiku['Welcome to this file\n',
+
+# readlines()
+import pprint
+
+f = open('somefile1.txt')
+pprint.pprint(f.readlines())
+f.close()
+# ['Welcome to this file\n',
+#  'There is nothing here except\n',
+#  'This stupid haiku']
+
+# write()
+f = open('somefile1.txt', 'w')
+f.write('this \nis no \nhaiku')
+f.close()
+# 文件somefile1.txt内容：
+# this 
+# is no 
+# haiku
+
+f = open('somefile1.txt')
+# 读取所有行
+lines = f.readlines()
+# 修改第二行
+lines[1] = "isn't a\n"
+f.close()
+f = open('somefile1.txt', 'w')
+#写入文件
+f.writelines(lines)
+f.close()
+# 文件somefile1.txt内容：
+# this
+# isn't a
+# haiku
+```
+
+## 11.3 迭代文件内容
+### 11.3.1 每次一个字符（或字节）
+一种最简单(也可能是最不常见)的文件内容迭代方式是，在while循环中使用方法read。 例如，你可能想遍历文件中的每个字符(在二进制模式下是每个字节)
+```python
+with open('somefile.txt') as f:
+    while True:
+        char = f.read(1)
+        if not char:
+            break
+        process(char)
+        
+```
+### 11.3.2 每次一行
+```python
+with open('somefile.txt') as f:
+    while True:
+        line = f.readline()
+        if not line:
+            break
+        process(line)
+```
+### 11.3.3 读取所有内容
+如果文件不算太大，可以通过read()或readlines()方法一下把所有的内容读取进来，之后再进行迭代。
+```python
+# 通过read()方法全部读取进来之后，再逐个字符迭代
+with open('somefile1.txt') as f:
+    for char in f.read():
+        process(char)
+# 先通过readlines()读取所有行，再迭代
+with open('somefile1.txt') as f:
+    for line in f.readlines():
+        process(line)
+```
+### 11.3.4 使用fileinput实现延迟迭代
+有时需要迭代的文件很大，使用readlines将占用太多内存。虽然可以使用while配合readline，但是在Python中，可能的情况下，应首选for循环。
+可以使用名为延迟行迭代的方法，说它延迟是因为它只读取实际需要的文本部分。
+```python
+import fileinput
+for line in fileinput.input(filename):
+    process(line)
+```
+### 11.3.5 文件迭代器
+最常见的方法是直接迭代文件，因为文件实际上是可迭代的，所以可以直接在for循环中直接使用它们来迭代行
+```python
+with open('somefile.txt') as f:
+    for line in f:
+        process(line)
+```
+上面的例子里，都用了上下文管理器，以确保文件得以关闭。但其实只要不写入文件，就并非得这样做。你可以让Python去负责关闭文件。
+```python
+for line in open('somefile.txt'):
+    process(line)
+```
+与文件一样，sys.stdin也是可迭代的，所以要是想迭代标准输入中的所有行，可以像下面这样：
+```python
+import sys
+for line in sys.stdin:
+    process(line)
+```
+另外，可对迭代器做的事情基本上都可对文件做，如(使用list(open(filename)))将其转换为字符串列表，其效果与使用readlines相同。
+```shell
+# 以写入模式打开文件
+>>> f = open('somefile.txt', 'w')
+# 分别写入三行
+# 使用了print来写入文件，这将自动在提供的字符串后面添加换行符。
+>>> print('First', 'line', file=f)
+>>> print('Second', 'line', file=f)
+>>> print('Third','and final', 'line', file=f)
+# 写入文件后将其关闭，以确保数据得以写入磁盘。
+>>> f.close()
+# 使用list方法将可迭代的文件转换为列表
+>>> lines = list(open('somefile.txt'))
+>>> lines
+['First line\n', 'Second line\n', 'Third and final line\n']
+
+# 对打开的文件进行序列解包
+>>> first, second, third = open('somefile.txt')
+>>> first
+'First line\n'
+>>> second
+'Second line\n'
+>>> third
+'Third and final line\n'
+
+# 但如果不知道文件有多少行就会尴尬
+>>> a, b = open('somefile.txt')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: too many values to unpack (expected 2)
+
+>>> a, b, c, d = open('somefile.txt')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: not enough values to unpack (expected 4, got 3)
+
+```
