@@ -177,3 +177,9 @@ chmod 755 somescript.cgi
 ```shell
 chomd 666 editable_file.txt
 ```
+
+### 15.2.4 CGI安全风险
+使用CGI程序存在一些安全风险。如果允许CGI脚本写入文件，那么可能被人利用来破坏数据。  
+同样， 如果直接将用户提供的数据作为Python代码（如使用exec或eval）或shell代码（如使用os.system或subprocess）执行，
+就可能执行恶意命令，进而面临极大风险。  
+即便在SQL查询中使用用户提供的字符串也很危险，除非你预先仔细审查这些字符串。 SQL注入是一种常见的攻击系统的方式。
