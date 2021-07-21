@@ -183,3 +183,18 @@ chomd 666 editable_file.txt
 同样， 如果直接将用户提供的数据作为Python代码（如使用exec或eval）或shell代码（如使用os.system或subprocess）执行，
 就可能执行恶意命令，进而面临极大风险。  
 即便在SQL查询中使用用户提供的字符串也很危险，除非你预先仔细审查这些字符串。 SQL注入是一种常见的攻击系统的方式。
+
+### 15.2.5简单的CGI脚本
+将下列脚本放在cgi-bin目录下
+```python
+#!E:\Programs\Python\Python38-32\python.exe
+
+print('Content-type: text/plain')
+print() # 打印一个空行，以结束首部
+
+print('Hello, world')
+```
+访问网页`http://127.0.0.1:8000/cgi-bin/simple1.py` 可以看到输出的Hello, world。  
+这个程序写入到标准输出的内容都将出现在网页中。首先打印的是HTTP首部，包含有关网页的信息。
+这里使用`Content-type: text/plain`指定网页是纯文本的。打印完首部之后，打印了一个空行，
+接下来为文档本身，这里只包含字符串`'Hello, world'`。
