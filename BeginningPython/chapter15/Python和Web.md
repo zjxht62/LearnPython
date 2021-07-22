@@ -198,3 +198,80 @@ print('Hello, world')
 这个程序写入到标准输出的内容都将出现在网页中。首先打印的是HTTP首部，包含有关网页的信息。
 这里使用`Content-type: text/plain`指定网页是纯文本的。打印完首部之后，打印了一个空行，
 接下来为文档本身，这里只包含字符串`'Hello, world'`。
+
+### 15.2.6 使用cgitb进行调试
+如果CGI程序出错，可能导致Web服务器显示毫无帮助的错误信息。如果能查看服务器日志的话，可能还能找到些线索。
+其实，标准库为了帮助调试CGI脚本，提供了一个有用的模块`cgitb`（用于CGI栈跟踪）。通过导入这个模块，并调用其中的函数`enable`，
+可显示一个很有用的网页，其中包含有关什么地方出了问题的信息。
+```python
+#! /Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9
+
+
+import cgitb; cgitb.enable()
+print('Content-type:text/html\n')
+print(1/0)
+print('Hello, world!')
+```
+
+### 15.2.7 使用模块cgi
+之前的demo都只是输出。输入是通过HTML表单以键值对的方式提供给CGI脚本的。可以使用模块cgi中的FieldStorage类来获取这些字段。
+当你创建FiledStorage实例（应该只创建一个）时，他将从请求中取回输入变量，并通过类似字典的接口将它们提供给脚本。
+要访问 FieldStorage中的值，可通过普通的键查找，但出于一些技术原因(与文件上传相关，这里不讨 论)，FieldStorage的元素并不是你要的值。
+例如，即便你知道请求包含一个名为name的值，也不能像下面这样做:
+```python
+form = cgi.FieldStorage()
+name = form['name']
+```
+而必须这样：
+```python
+form = cgi.FieldStorage()
+name = form['name'].value
+```
+更简单的获取值的方式是使用方法getvalue。它类似于字典的方法get，但返回项目的value属性的值，如下所示:
+```python
+form = cgi.FieldStorage()
+name = form.getvalue('name', 'Unknown')
+```
+举例：从FieldStorage中获取单个值的CGI脚本
+```python
+#! /Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9
+
+import cgi
+
+form = cgi.FieldStorage()
+
+name = form.getvalue('name', 'world')
+print('Content-type:text/html\n')
+
+print('Hello, {}!'.format(name))
+
+```
+通过浏览器访问`http://127.0.0.1:8000/cgi-bin/simple2.py?name=zjx`输出结果`Hello, zjx!`
+
+### 15.2.8 简单的表单
+> 从CGI脚本中获取信息主要有两种方式：GET和POST。大致上，GET用于获取信息并在URL中进行查询编码，而POST可用于任何类型的查询，
+> 但对查询进行编码的方式稍有不同。
+
+示例：包含HTML表单的问候脚本
+```python
+#! /Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9
+
+import cgi
+
+form = cgi.FieldStorage()
+
+name = form.getvalue('name', 'world')
+print("""Content-type: text/html
+
+<html> <head>
+<title>Greeting Page</title> </head>
+<body>
+<h1>Hello, {}!</h1>
+<p>下面这行意味着提交表单，将再次执行simple3.py脚本</p>
+<form action='simple3.py'>
+Change name <input type='text' name='name' /> <input type='submit' />
+</form>
+</body> </html>
+""".format(name))
+```
+## 15.3 使用Web框架
