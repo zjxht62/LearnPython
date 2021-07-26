@@ -17,10 +17,10 @@ class ProductTestCase(unittest.TestCase):
                 p = my_math.product(x, y)
                 self.assertEqual(p, x * y, 'Float multiplication failed')
 
-    def test_with_PyChecker(self):
-        cmd = 'pychecker', '-Q', my_math.__file__.rstrip('c')
-        pychecker = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        self.assertEqual(pychecker.stdout.read(), '')
+    # def test_with_PyChecker(self):
+    #     cmd = 'pychecker', '-Q', my_math.__file__.rstrip('c')
+    #     pychecker = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    #     self.assertEqual(pychecker.stdout.read(), '')
 
     def test_with_PyLint(self):
         cmd = 'pylint', '-rn', 'my_math'
