@@ -223,4 +223,124 @@ Python C API有专门的参考手册，即“Python/C API参考手册”(https:/
    编写Python扩展时，可以使用Python在幕后使用的内存管理工具，其中之一就是引用计数。它的基本理念是，一个对象只要被代码引用，就不应该将它释放。
    然而，指向对象的引用数为0后，引用数就不可能再增大--没办法创建指向相应对象的新引用。因此对象在内存中是自由浮动的。此时，可以安全地释放它。
    引用计数自动完成这个过程。所以，我们需要遵守一系列规则，这些规则指定了在各种情况下应将对象的引用计数加1或减1；而引用计数变为0后，对象将被自动释放。
-   这意味着Python里没有专门负责管理对象的代码，因为你知道当对象不再被需要的时候，就会自动被释放。
+   这意味着Python里没有专门负责管理对象的代码，因为你知道当对象不再被需要的时候，就会自动被释放。  
+   为了将对象的引用计数加1或减1，可以使用两个宏，分别是Py_INCREF和Py_DECREF，有关这两个宏的详细用法，可以参考Python文档，这里列出了其中的一些要点。  
+   + 对象不归你所有，但指向它的引用归你所有。一个对象的引用计数是指向它的引用数量。
+   + 对于归你所有的引用，你必须负责在不再需要它时调用Py_DECREF
+   + 对于暂时借你的引用，不应在借用完后调用Py_DECREF，因为这是引用所有者的职责
+   > 警告 对于借来的引用，决不能在所有者将其释放后再使用。有关确保安全的更多建议，请参阅文档的Thin ice部分。
+   + 可以通过调用Py_INCREF将借来的引用变成自己的。这将创建一个新引用，而借来的引用依然归原来的所有者所有。
+   + 通过参数收到对象后，要转移所有权（比如将它存储起来）还是仅仅借用完全由你决定，但应清楚地说明。
+     如果函数将在Python中调用，完全可以只借用，因为对象在整个函数调用期间都存在。
+     然而，如果函数将在C语言中调用，就无法保证对象在函数调用期间都存在，因此可能应该创建自己的引用，并在使用完毕后将其释放。
+     
+   > 再谈垃圾收集   
+   > 引用计数是一种垃圾收集方式，其中的“垃圾“指的是不再使用的对象。Python还使用一种更尖端的算法来检测循环垃圾，即两个对象互相引用对方（导致它们的引用计数不为0），但没有其他对象引用它们。  
+   > Python程序中，可通过模块gc来访问Python垃圾收集器。详细信息可以参考官方文档（https://docs.python.org/3/library/gc.html）
+   
+2. 扩展框架  
+编写Python的C语言扩展时，需要大量的模板代码，所以SWIG等工具可以提供极大地帮助。但是手工编写也是一种学习体验。
+   在如何组织代码方面有很大的选择空间，但这里只介绍一种管用的方式。  
+   首先要牢记的是，必须先包含头文件Python.h，再包含其他标准头文件。这是因为在有些平台上，
+   Python.h可能会做些重新定义，而其他头文件需要用到这些新定义。所以请将下面的内容作为第一行代码：  
+   `#include <Python.h>`  
+   你想给函数指定什么样的名称都可以，但它必须是静态的，返回一个指向PyObject对象的指
+   针（归你所有的引用）并接受两个参数（它们也都是指向PyObject的指针）。根据约定，将这两
+   个参数分别命名为self和args（其中self为当前对象或NULL，而args是由参数组成的元组）。换而
+   言之，函数应类似于下面这样：
+   ```c
+   static PyObject *somename(PyObject *self, PyObject *args) {
+      PyObject *result;
+      /* 在这里执行操作，包括分配result*/
+   
+      Py_INCREF(result); /* 仅当需要时才这样做！ */
+      return result;
+   }
+   ```
+   参数self仅用于关联的方法中。在其他函数中，这个参数为NULL指针。  
+   可能不需要调用Py_INCREF。如果对象是在函数中创建的（如通过使用Py_BuildValue
+   等辅助函数），函数便用于指向它的引用，因此只需返回它即可。然而，如果要从函数返回None，
+   应使用既有的对象Py_None。在这种情况下，函数并不拥有指向Py_None的引用，因此必须在返回
+   它之前调用Py_INCREF(Py_None)。  
+   参数args包含传递给函数的所有参数（参数self除外）。为提取这些参数，可使用
+   PyArg_ParseTuple（适用于位置参数）和PyArg_ParseTupleAndKeywords（适用于位置参数和关键
+   字参数）。这里只使用位置参数。  
+   函数PyArg_ParseTuple的特征标如下：  
+   `int PyArg_ParseTuple(PyObject *args, char *format, ...);`  
+   其中格式字符串描述了期望的参数，它后面是要将参数存储到其中的变量的地址。返回值是
+   一个布尔值，如果为True意味着一切顺利，否则意味着发生了错误。发生错误时引发异常的准备
+   工作已就绪（详细信息请参阅文档），你只需返回NULL来触发这个过程。因此，如果你预期没有
+   任何参数（格式字符串为空），下面是一种很有用的参数处理方式：
+   ```c
+   if (!PyArg_ParseTuple(args, "")) {
+      return NULL;
+   }
+   ```
+   执行这条语句后，便提取了参数（这里是没有任何参数）。在格式字符串中， "s"表示字符串，
+   "i"表示整数， "o"表示Python对象，因此"iis"表示两个整数和一个字符串。还有很多其他的格式
+   字符串编码。有关如何编写格式字符串的完整参考，请参阅“Python/C API 参考手册”
+   （https://docs.python.org/3/c-api/arg.html）。  
+   函数创建好后，还需做些包装工作，让C语言代码充当模块。等我们遇到实际示例时再
+   讨论吧。
+   
+3. 回文  
+下面是手工编写的模块palindrome的Python C API版，其中包括一些有趣的内容  
+   ```c
+   #include <Python.h>
+   static PyObject *is_palindrome(PyObject *self, PyObject *args) {
+      int i, n;
+      const char *text;
+      int result;
+      /* "s"表示一个字符串： */
+      if (!PyArg_ParseTuple(args, "s", &text)) {
+      return NULL;
+      }
+      /* 与旧版的代码大致相同： */
+      n=strlen(text);
+      result = 1;
+      for (i = 0; i <= n/2; ++i) {
+         if (text[i] != text[n-i-1]) {
+            result = 0;
+            break;
+         }
+      }
+      /* "i"表示一个整数： */
+      return Py_BuildValue("i", result);
+   }
+   
+   /* 方法/函数列表： */
+   static PyMethodDef PalindromeMethods[] = {
+      /*名称、函数、参数类型、文档字符串 */
+      {"is_palindrome", is_palindrome, METH_VARARGS, "Detect palindromes"},
+      /* 列表结束标志： */
+      {NULL, NULL, 0, NULL}
+   };
+   
+   static struct PyModuleDef palindrome =
+   {
+      PyModuleDef_HEAD_INIT,
+      "palindrome", /* 模块名 */
+      "", /* 文档字符串 */
+      -1, /*存储在全局变量中的信号状态 */
+      PalindromeMethods
+   };
+   
+   /* 初始化模块的函数： */
+   PyMODINIT_FUNC PyInit_palindrome(void)       
+   {
+      return PyModule_Create(&palindrome);
+   }
+   ```
+   在代码中，新增的大部分内容都是模板代码。可将palindrome替换为模块名，将
+   is_palindrome替换为函数名。如果还有其他函数，只需在数组PyMethodDef中将它们列出。然而，
+   需要注意的一点是，初始化函数必须为initmodule，其中module为模块名；否则Python就找不到它。  
+   接下来使用gcc编译它：  
+   `$ gcc -I$PYTHON_HOME -I$PYTHON_HOME/Include -shared palindrome2.c -o palindrome.so`  
+   通常，这将生成一个名为palindrome.so的文件。只要将它放在PYTHONPATH包含的目录（如当前目录）中，就可开始使用了：
+   ```text
+   >>> from palindrome import is_palindrome
+   >>> is_palindrome('foobar')
+   0
+   >>> is_palindrome('deified')
+   1
+   ```
