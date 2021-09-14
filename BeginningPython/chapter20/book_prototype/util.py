@@ -10,6 +10,11 @@ def blocks(file):
     for line in lines(file):
         if line.strip():
             block.append(line)
+        # elif 在这里的作用是判断文本块list内是否有内容，对于连续的空行，不会通过yield生成
         elif block:
             yield ''.join(block).strip()
             block = []
+
+
+if __name__ == '__main__':
+    print(list(blocks(open('test_input.txt'))))
