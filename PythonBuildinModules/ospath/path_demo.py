@@ -58,4 +58,17 @@ print(os.path.join('/Users/', 'zjx/PycharmProjects'))  # /Users/zjx/PycharmProje
 print(os.path.join('/Users', '/zjx/PycharmProjects'))  # /zjx/PycharmProjects
 print(os.path.join('/Users', '/zjx/PycharmProjects', '/haha'))  # /haha
 
+# 从当前目录或可选的起始目录返回到 path 的相对文件路径。是一个路径计算：不访问文件系统来确认路径或开始的存在或性质。在 Windows 上，当 path 和 start 位于不同的驱动器上时会引发 ValueError。
+print(os.path.relpath('/Users/zjx/PycharmProjects', '.'))  # ../../..
 
+# 如果两个路径名参数都指向同一个文件或目录，则返回 True。
+print(
+    os.path.samefile('/Users/zjx/PycharmProjects/LearnPython/PythonBuildinModules/ospath/note.md', './note.md'))  # True
+
+# os.path.split(path)
+# 将路径名路径拆分为一对 (head, tail)，其中 tail 是最后一个路径名组件，head 该组件之前的所有内容。如果路径以斜杠结尾，则tail将为空。
+# 如果 path 为空，则 head 和 tail 都为空。
+print(os.path.split(
+    '/Users/zjx/PycharmProjects/LearnPython/PythonBuildinModules/ospath'))  # ('/Users/zjx/PycharmProjects/LearnPython/PythonBuildinModules', 'ospath')
+print(os.path.split(
+    '/Users/zjx/PycharmProjects/LearnPython/PythonBuildinModules/ospath/'))  # ('/Users/zjx/PycharmProjects/LearnPython/PythonBuildinModules/ospath', '')
