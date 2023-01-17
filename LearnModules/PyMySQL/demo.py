@@ -3,10 +3,10 @@ import pymysql.cursors
 # 连接数据库
 connection = pymysql.connect(host='192.168.50.53',
                              user='root',
-                             password='123456',
+                             password='c9r6e2h7',
                              database='learn',
                              charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+                             cursorclass=pymysql.cursors.SSCursor)
 
 with connection:
     print(connection.open)
