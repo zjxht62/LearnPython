@@ -11,7 +11,6 @@ urls = [
 def craw(url):
     r = requests.get(url)
     return r.text
-    print(url, len(r.text))
 
 
 def parse(html):
@@ -21,5 +20,5 @@ def parse(html):
     return [(link['href'], link.get_text())for link in links]
 
 if __name__ == '__main__':
-    for result in parse(craw(urls[2])):
+    for result in parse(craw(urls[10])):
         print(result)
