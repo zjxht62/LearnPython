@@ -206,5 +206,133 @@ bar(vector=(1, 2, 3))
 v_3d = Vector3D((4, 5, 6))
 bar(vector=v_3d)
 ```
+## 更多类型
+### NoReturn
+如果函数没有返回值，可以这么写：
+```python
+from typing import NoReturn
+def hello()->NoReturn:
+    raise RuntimeError("haha")
+```
+但是下面这样是错误的：
+```python
+from typing import NoReturn
+
+
+def hello() -> NoReturn:
+    pass
+```
+因为Python函数运行结束时，隐式返回`None`，这和真正的没有返回值还是有区别的。
+### Optional
+有时，函数可能返回不同类型的返回值
+```python
+def foo(a: int = 1) -> str:
+    if a == 1:
+        return  "Yeah"
+```
+就像上面的函数，既有可能返回`str`也有可能返回`None`。单凭返回值注解`str`无法说明此情况。
+
+这种可能有，也可能没有的状态被称为可选值，在某些项目中非常常见。比如 web 应用中某个函数接受账号和密码作为参数，
+如果匹配则返回用户对象，若不匹配则返回 None 。
+
+因此，有专门的可选值类型注解可以处理这种情况：
+
+```python
+from typing import Optional
+
+
+def foo1(a: int = 1) -> Optional[str]:
+    if a == 1:
+        return "Yeah"
+```
+上面的`Optional[str]`表示可能为str，也可能为None
+
+### Union
+比`Optional`覆盖更广的是`Union`
+如果函数的返回值是多种类型之一的话，可以这样写：
+```python
+from typing import Union
+
+def foo() -> Union[str, int, float]:
+    # ....
+    # some code here
+```
+上面这个函数可以返回字符串、整型、浮点型中的任意一种类型。
+
+可以发现实际上`Optional`是`Union`的特例：`Optional[str]`等价于`Union[str, None]`
+
+### Callable
+在Python中，函数和类的区别并不明显，只有是类实现了对应的接口，那么类实例也是可调用的。
+如果不关心对象的具体类型，只要求是可调用的，那么可以这样写
+```python
+from typing import Callable
+
+class Foo:
+    def __call__(self):
+        print('I am foo')
+
+def bar():
+    print('I am bar')
+
+
+def hello(a: Callable):
+    a()
+
+# 类型检查通过
+hello(Foo())
+# 同样通过
+hello(bar)
+```
+### Literal
+即字面量。它在定义简单的枚举时非常好用。
+```python
+from typing import Literal
+
+MODE = Literal['r', 'rb', 'w', 'wb']
+def open_helper(file: str, mode: MODE) -> str:
+    ...
+
+open_helper('/some/path', 'r')  # 成功
+open_helper('/other/path', 'typo')  # 失败
+```
+### Protocol
+即**协议**。我们通常说一个对象遵守了某个”协议“，意思是这个对象实现了”协议“中规定的属性或者方法。
+```python
+from typing import Protocol
+
+class Proto(Protocol):
+    def foo(self):
+        print('I am proto')
+
+class A:
+    def foo(self):
+        print('I am A')
+
+class B:
+    def bar(self):
+        print('I am B')
+
+def yeah(a: Proto):
+    pass
+
+# 通过，A 实现了协议中的 foo() 方法
+yeah(A())
+# 不通过，B 未实现 foo()
+yeah(B())
+```
+### Any
+如果你实在不知道某个类型注解应该怎么写时，这里还有个最后的逃生通道：
+```python
+from typing import Any
+
+
+def foo() -> Any:
+    pass
+```
+任何类型都与 `Any` 兼容。当然如果你把所有的类型都注解为 `Any` 将毫无意义，因此 `Any` 应当尽量少使用。
+
+
+
+
 
 
