@@ -330,9 +330,106 @@ def foo() -> Any:
     pass
 ```
 任何类型都与 `Any` 兼容。当然如果你把所有的类型都注解为 `Any` 将毫无意义，因此 `Any` 应当尽量少使用。
+## 泛型
+要理解`泛型`，首先需要理解没有它时出现的问题。
+假设有一个函数，要求它既能处理字符串，也能处理数字。那么，你可能很容易想到`Union`。
+```python
+from typing import Union
+
+U = Union[str, int]
 
 
+def foo(a: U, b: U) -> list[U]:
+    return [a, b]
+```
+但是，这样会存在一个问题，就是参数类型可以混着用（比如a是str，b是int），然而我们需要的是a和b同时是int或同时是str。
+```python
+# 类型检查通过
+# 因为Union[str, int]可以是其中任意一个类型
+# 即使你不想让int和str混用
+foo(123, 'aaa')
+foo(19, 39)
+foo('aaa', 'bbb')
+```
+可以通过**泛型**来解决这个问题：
+```python
+from typing import TypeVar
+
+# 定义泛型T
+# T必须是str或int中的一种
+T = TypeVar('T', str, int)
 
 
+def bar(a: T, b: T) -> list[T]:
+    return [a, b]
+
+# 类型检查不通过
+# 函数的参数必须为同一个类型“T”
+bar(123, 'aaa')
+# 通过
+bar(19, 39)
+# 通过
+bar('aaa', 'bbb')
+
+```
+可以看出，泛型类似于某种模板（或者占位符），它可以很精确地将对象限定在你真正需要的类型。
+```python
+from typing import TypeVar
+
+# 定义泛型 K 和 V
+# K 和 V 的具体类型没有限制
+K = TypeVar("K")
+V = TypeVar("V")
+
+
+def get_item(key: K, container: dict[K, V]) -> V:
+    return container[key]
+
+
+dict_1 = {"age": 10}
+dict_2 = {99: "haha"}
+
+# 例1
+# 类型检查通过，输出：10
+print(get_item("age", dict_1))
+
+# 例2
+# 类型检查通过：输出：haha
+print(get_item(99, dict_2))
+
+# 例3
+# 类型检查失败
+# 因为“name”是字符串，而dict_2的键为int
+print(get_item("name", dict_2))
+```
++ 代码中定义了两个泛型K和V，对他俩的类型没有做任何的限制，也就是说可以是任意类型
++ 函数`get_item()`接受两个参数。这个函数不关心参数`container`字典的键是什么类型，或者字典的值是什么类型；
+但是它的参数`container`必须是字典，参数`key`必须与字典的键为同类型，并且返回值和字典的值必须为同类型。
+仅仅通过查看函数的类型注解，就可以获得所有这些信息
+
+重点来看一下为什么例3的类型检查会失败：
++ `dict_2`在定义的时候，key的类型为int，value的类型为str
++ `get_item("name", dict_2)`调用的时候，传的第一个参数`name`是个字符串，而`dict_2`的键为整型，类型不一致。
+而类型注解中清楚表明它两应该为同一个类型 K ，产生冲突。
++ 编辑器察觉到冲突，友好地提示你，这里可能出错了。
+
+泛型很巧妙地对**类型进行了参数化**，同时又保留了函数处理不同类型时的灵活性。
+
+再回过头来看看类型注解的作用：
+```python
+def get_item(key: K, container: Dict[K, V]) -> V:
+    # ...
+
+def get_item(key, container):
+    # ...
+```
+上面两个函数功能完全相同，但是没有类型注解的那个，显然需要花更多的时间阅读函数内部的代码，去确认函数到底干了什么。并且它也无法利用编辑器的类型检查，在早期帮助排除一些低级错误。
+
+## 总结
+最后再总结下，Python 社区为什么花了很大力气，去实现了类型注解这个仅仅起”提示作用“的功能：
++ 让代码模块的功能更清晰。
++ 让编辑器可以帮助你尽早发现问题。
+
+什么时候用类型注解要根据情况而定。但总体来说是推荐尽量多用，它让 Python 保持了原有的灵活性，并且兼顾了强类型语言的严谨。
 
 
