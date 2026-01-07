@@ -13,10 +13,13 @@ print(strList)
 del strList[0]
 print(strList)
 # 分片赋值
+# 分片赋值可以比原分片更大，Python 会先删除左边指定的分片区域，然后将右边的序列元素依次插入到该位置。
 strList[0:3] = ['粪', '粪']
+strList[:1] = ["王","嘉","诚"]
 print(strList)
 # 利用分片来插入，同理可用于删除
 numbers = [1, 5]
+# numbers[1:1] 其实切片出来的是一个空列表，而且切到的正好是1和5的中间，之后的赋值操作，将234插入到列表中
 numbers[1:1] = [2, 3, 4]
 print(numbers)
 

@@ -6,6 +6,7 @@ print(numbers[3:5])
 
 # 访问最后三个元素
 print(numbers[-3:])
+print(numbers[-3:-1])
 
 # 获取前三个元素
 print(numbers[:3])
