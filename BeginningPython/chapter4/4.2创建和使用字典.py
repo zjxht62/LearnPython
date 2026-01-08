@@ -43,6 +43,10 @@ template = '''<html>
 data = {"title": "My home page", "text": "欢迎"}
 print(template.format_map(data))
 
+# 现代写法（解构）：
+data = {"title": "Home", "text": "Welcome"}
+print("{title}: {text}".format(**data))
+
 ### 4.2.4 字典方法
 # clear 清除字典中所有项,
 # 对当前字典进行操作，没有返回值

@@ -63,6 +63,7 @@ string = "    sdafs   "
 print(string.strip())
 
 string = "*** SPAM * for * everyone!!! ***".strip(' *!')
+# strip里的参数其实有三个（空格、*号和！号）分别从两侧开始去除这三个符号，直到没有匹配，就停止删除
 print(string) # SPAM * for * everyone
 
 ### 3.4.7 translate

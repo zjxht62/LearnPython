@@ -32,5 +32,6 @@ print("{name} is approximately {value:.2f}.".format(value=pi, name="兀"))
 # 当变量与替换字段同名，可以进行简写
 from math import e
 
+# 最常用
 print(f"Euler's constant is roughly {e}")
 # Euler's constant is roughly 2.718281828459045
