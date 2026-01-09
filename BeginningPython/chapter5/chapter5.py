@@ -112,6 +112,11 @@ while x < 101:
     print(x)
     x += 1
 
+name = ''
+while not name:
+    name = input('Enter your name:')
+print(f'hello{ name}!')
+
 # for循环
 # 可以使用for循环遍历可迭代的对象
 words = ['fuck', 'you', 'haha']
